@@ -1,25 +1,40 @@
 <div class="container">
- 
-	<form>
-	<div class="form-group">
-		<label for="name">Name</label>
-		<input type="text" class="form-control" id="name"  placeholder="Enter name">
-		<!-- <small id="name" class="form-text text-muted">invalid </small> -->
+ <div class="mt-3">
+ <form>
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<div class="form-floating mb-3 mb-md-0">
+				<input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" />
+				<label for="inputFirstName">First name</label>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-floating">
+				<input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" />
+				<label for="inputLastName">Last name</label>
+			</div>
+		</div>
 	</div>
-	<div class="form-group">
-		<label for="email">Email address</label>
-		<input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-		<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+	
+	<div class="row mb-3">
+		<div class="col-md-6">
+			<div class="form-floating mb-3 mb-md-0">
+				<input class="form-control" id="email" type="text" placeholder="enter email" />
+				<label for="email">email</label>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-floating mb-3 mb-md-0">
+				<input class="form-control" id="image" type="file" placeholder="file upload" />
+				
+			</div>
+		</div>
 	</div>
-	<div class="form-group">
-		<label for="address">address</label>
-		<input type="text" class="form-control" id="address" placeholder="address">
+	<div class="mt-4 mb-0">
+		<div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div>
 	</div>
-	<div class="form-group">
-		<label for="exampleFormControlFile1">Example file input</label>
-		<input type="file" class="form-control-file" id="exampleFormControlFile1">
-	</div>
-	<button type="submit" class="btn btn-primary">Submit</button>
-	</form>
+</form>
+ </div>
+
 
 </div>

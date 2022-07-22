@@ -102,15 +102,22 @@ class Home extends CI_Controller {
 
 	public function registrationAction(){
 		//print_r($_POST);
-		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|alpha');
+		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|alpha' , array(
+			'required' => '%s is required',
+			'alpha' => 'Name only in alphabate'
+		));
 		$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|alpha');
-		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');
+		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[users.email]', array(
+			'required' => 'email  is required',
+			'valid_email' => 'enter valid email address',
+			'is_unique' => '%s is already exit '
+		));
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[12]', array(
 			 'required' => 'Password is required',
 			 'min_length'=> 'password atleast 6 charaters',
 			 'max_length' => 'maximum length is 12'
 		));
-		$this->form_validation->set_rules('confirm_password', 'confirm Password', 'required');
+		$this->form_validation->set_rules('confirm_password', 'confirm Password', 'trim|required|matches[password]');
 		$registerBtn = $this->input->post('registerbtn');
 
 		if(isset($registerBtn)){
@@ -126,13 +133,13 @@ class Home extends CI_Controller {
 					$password = $this->input->post('password');
 					$confirmPassword = $this->input->post('confirm_password');
 
-					$getUser=$this->Home_model->checkEmail("email='".$email."'");
+					//$getUser=$this->Home_model->checkEmail("email='".$email."'");
 					//print_r($this->db->last_query());exit; // for checking the data is  here or note, value in the qurey form 
 					//print_r($getUser);exit;
-					if(empty($getUser))
-					{   // chack is user exist or not
+					//if(empty($getUser))
+					//{   // chack is user exist or not
 						//echo "sssssss";exit;
-						if(md5($password)== md5($confirmPassword)){
+						//if(md5($password)== md5($confirmPassword)){
 							$data = array(
 								'name'=> $firstName." ".$lastLame,
 								'email' =>$email,
@@ -145,22 +152,22 @@ class Home extends CI_Controller {
 				          //print_r($saveUser);exit; /** show o/p ->5  tihs is inlast insert id no. */
 						// print_r($this->db->last_query());exit;/** this o/p ->INSERT INTO `users` (`name`, `email`, `password`, `status`) VALUES ('apnaa com', 'apna@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', 'inactive') */
 						redirect('Home'); 
-					}
-						else{
-							$error =array(
-								'error_message'=>'Password and Confirm password does not match'
-							);
-							$this->load->view('home/register');
-						}
-					}
-					else
-					{
-						$error = array( 
-							'error_message' => 'this user already register with this email'
-						);
-						$this->load->view('home/register' , $error);
+					//}
+						// else{
+						// 	$error =array(
+						// 		'error_message'=>'Password and Confirm password does not match'
+						// 	);
+						// 	$this->load->view('home/register');
+						// } /**/for sotcut matches[password]  put in confirm password */
+					//}
+					// else
+					// {
+					// 	$error = array( 
+					// 		'error_message' => 'this user already register with this email'
+					// 	);
+					// 	$this->load->view('home/register' , $error);
 
-					} 
+					// } /**/is_unique */
 				  }
 		}//if(isset($registerBtn))
 		else{
