@@ -9,7 +9,7 @@
 		<div class="card mb-4">
 			<div class="card-header">
 				<i class="fas fa-user me-1"></i>
-				Profile setting
+				Profile setting | <?php if(!empty($this->session->flashdata('success_message'))) {echo $this->session->flashdata('success_message');} ?>
 			</div>
 			<?php if(isset($error_message) && !empty($error_message)){
 				echo $error_message;
@@ -17,11 +17,16 @@
 			<div class="card-body">
 			<form method="post" action="<?php echo site_url("User/profileSettingAction"); ?>" enctype="multipart/form-data" >
                <?php
-			        if(!empty(userData->name))  {
-						$username = 
+			    //    $firstName = ''; // if sed this do not sed isset fnction to check errror handling
+				//    $lastName = '';
+			        if(!empty($userData->name))  {
+						$userName= explode(" ", $userData->name);
+						//print_r($userName);exit;
+						$firstName = $userName[0];
+						//$lastName = $userName[1];
 					}
-			   ?>
-
+			    ?>
+     
 				<div class="row mb-3">
 					<div class="col-md-4">
 						<div class="form-floating mb-3 mb-md-0">
@@ -30,12 +35,14 @@
 									type="text" 
 									placeholder="Enter your first name" 
 									name="fname"
-									value="<?php if($userData) ?>"/>
+									value="<?php if(isset($firstName)){echo $firstName;} ?>"
+									/>
 							<label for="inputFirstName">First name</label>
 						</div>
 						<span style="color:red;"><?php echo form_error('fname'); ?></span>
+
 					</div>
-					
+
 					<div class="col-md-4">
 						<div class="form-floating">
 							<input  class="form-control" 
@@ -43,11 +50,12 @@
 									type="text" 
 									placeholder="Enter your last name"
 									name="lname"
-									value= "<?php echo set_value('lname'); ?>" />
+									value= "<?php if(isset($lastName)){echo $lastName; } ?>" >
 							<label for="inputLastName">Last name</label>
 						</div>
+						<span style="color:red;"><?php echo form_error('lname'); ?></span>
 					</div>
-					<span style="color:red;"><?php echo form_error('lname'); ?></span>
+					
 				</div>
 				<div class="row mb-3">
 					<div class="col-md-4">
@@ -57,11 +65,12 @@
 									type="text" 
 									placeholder="enter email"
 									name="email" 
-									value= "<?php echo set_value('email'); ?>"/>
-							<label for="email">email</label>
+									value= "<?php if(!empty($userData->email)){ echo $userData->email; } ?>"/>
+							<label for="email">email </label>
 						</div>
 						<span style="color:red;"><?php echo form_error('email'); ?></span>
 					</div>
+					
 					
 					<div class="col-md-4">
 						<div class="form-floating mb-3 mb-md-0">
@@ -69,10 +78,10 @@
 							       id="image" 
 								   type="file" 
 								   placeholder="file upload"  
-								   name="img"/>
-						</div>
+								   name="user_img" value="<?php if(!empty($userData->user_img)){ echo $userData->user_img; } ?>"/>
+						        <small class="form-text text-muted">Only .png, .jpg, .jpeg, .gif file extension allowed.</small>
+								</div>
 					</div>
-					
 				</div>
 				<div class="col-md-4">
 						<div class="form-floating mb-3 mb-md-0">
@@ -80,8 +89,7 @@
 							          id="address" 
 									  row="7" 
 									  placeholder="Enter address"
-									  name="address" 
-									  value="<?php echo set_value('address'); ?>"></textarea>
+									  name="address"><?php if(!empty($userData->address)){ echo $userData->address; } ?></textarea>
 							<label for="id">Address</label>
 						</div>
 				</div>

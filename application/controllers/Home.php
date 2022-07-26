@@ -120,7 +120,8 @@ class Home extends CI_Controller {
 		$this->form_validation->set_rules('confirm_password', 'confirm Password', 'trim|required|matches[password]');
 		$registerBtn = $this->input->post('registerbtn');
 
-		if(isset($registerBtn)){
+	//	if(!empty($_POST)){
+			  
                   if($this->form_validation->run()== FALSE)
 				  {
                           $this->load->view('home/register');
@@ -128,7 +129,7 @@ class Home extends CI_Controller {
 				  else
 				  {
                     $firstName = $this->input->post('first_name');
-					$lastLame = $this->input->post('last_name');
+					$lastName = $this->input->post('last_name');
 					$email = $this->input->post('email');
 					$password = $this->input->post('password');
 					$confirmPassword = $this->input->post('confirm_password');
@@ -141,7 +142,7 @@ class Home extends CI_Controller {
 						//echo "sssssss";exit;
 						//if(md5($password)== md5($confirmPassword)){
 							$data = array(
-								'name'=> $firstName." ".$lastLame,
+								'name'=> $firstName." ".$lastName,
 								'email' =>$email,
 								'password'=>md5($password),
 								'status'=>'inactive',
@@ -169,10 +170,10 @@ class Home extends CI_Controller {
 
 					// } /**/is_unique */
 				  }
-		}//if(isset($registerBtn))
-		else{
-            $this->load->view('home/register');
-		}
+		//}//if(isset($registerBtn))
+	//	else{
+            //$this->load->view('home/register');
+		//}
 
 	}
 
