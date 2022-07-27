@@ -36,9 +36,8 @@
 														       value="<?php echo set_value('first_name'); ?>"/>
                                                         <label for="inputFirstName">First name</label>
                                                     </div>
-
+													<span style="color:red;"><?php echo form_error('first_name'); ?></span>
                                                 </div>
-												<span style="color:red;"><?php echo form_error('first_name'); ?></span>
                                                 <div class="col-md-6">
                                                     <div class="form-floating">
                                                         <input class="form-control" 
@@ -49,9 +48,8 @@
 															   value="<?php echo set_value('last_name'); ?>"/>
                                                         <label for="inputLastName">Last name</label>
                                                     </div>
-													
+													<span style="color:red;"><?php echo form_error('last_name');?></span>	
                                                 </div>
-												<span style="color:red;"><?php echo form_error('last_name');?></span>
                                             </div>
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" 
@@ -74,17 +72,15 @@
 															/>
                                                         <label for="inputPassword">Password</label>
                                                     </div>
+													<span style="color:red;"><?php echo form_error('password'); ?></span>
                                                 </div>
-												<span style="color:red;"><?php echo form_error('password'); ?></span>
                                                 <div class="col-md-6">
                                                     <div class="form-floating mb-3 mb-md-0">
                                                         <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" name="confirm_password" />
                                                         <label for="inputPasswordConfirm">Confirm Password</label>
                                                     </div>
-													
+													<span style="color:red;"><?php echo form_error('confirm_password'); ?></span>
                                                 </div>  
-												<span style="color:red;"><?php echo form_error('confirm_password'); ?></span>
-												
                                             </div>
 											
                                             <div class="mt-4 mb-0">

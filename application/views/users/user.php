@@ -2,10 +2,19 @@
 <main>
 	<div class="container-fluid px-4">
 		<h1 class="mt-4">Update Profile</h1>
+		<div class="float">
+		<div>
+				<!--  add button for change password-->
+		   <a href="<?php echo site_url('User/changePassword'); ?>"><button type="button" class="btn btn-primary float-end" >Change password</button></a>
+		</div>
+		<div>
 		<ol class="breadcrumb mb-4">
 			<li class="breadcrumb-item active">Dashboard</li>
 			<li class="breadcrumb-item active">Profile Setting</li>
 		</ol>
+		</div>
+		</div>
+	
 		<div class="card mb-4">
 			<div class="card-header">
 				<i class="fas fa-user me-1"></i>
@@ -23,7 +32,7 @@
 						$userName= explode(" ", $userData->name);
 						//print_r($userName);exit;
 						$firstName = $userName[0];
-						//$lastName = $userName[1];
+						$lastName = $userName[1];
 					}
 			    ?>
      
@@ -81,6 +90,7 @@
 								   name="user_img" value="<?php if(!empty($userData->user_img)){ echo $userData->user_img; } ?>"/>
 						        <small class="form-text text-muted">Only .png, .jpg, .jpeg, .gif file extension allowed.</small>
 								</div>
+						   <span style="color:red;"><?php echo form_error('user_img'); ?></span>
 					</div>
 				</div>
 				<div class="col-md-4">
@@ -100,5 +110,6 @@
 			</form>
 			</div>
 		</div>
+		
 	</div>
 </main>

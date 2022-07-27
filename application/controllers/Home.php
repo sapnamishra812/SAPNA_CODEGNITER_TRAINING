@@ -101,7 +101,7 @@ class Home extends CI_Controller {
 	/**this function is used for registration of users  */
 
 	public function registrationAction(){
-		//print_r($_POST);
+	//print_r($_POST);exit;
 		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|alpha' , array(
 			'required' => '%s is required',
 			'alpha' => 'Name only in alphabate'
@@ -120,7 +120,7 @@ class Home extends CI_Controller {
 		$this->form_validation->set_rules('confirm_password', 'confirm Password', 'trim|required|matches[password]');
 		$registerBtn = $this->input->post('registerbtn');
 
-	//	if(!empty($_POST)){
+		if(!empty($_POST)){
 			  
                   if($this->form_validation->run()== FALSE)
 				  {
@@ -147,7 +147,7 @@ class Home extends CI_Controller {
 								'password'=>md5($password),
 								'status'=>'inactive',
 								'created'=>date('Y-m-d H-i-s'), //error show call  to undefinde function Now()
-						           redirect('Home')
+
 							);
 						  $saveUser = $this->Home_model->insertData($data);
 				          //print_r($saveUser);exit; /** show o/p ->5  tihs is inlast insert id no. */
@@ -170,10 +170,10 @@ class Home extends CI_Controller {
 
 					// } /**/is_unique */
 				  }
-		//}//if(isset($registerBtn))
-	//	else{
-            //$this->load->view('home/register');
-		//}
+		}//if(isset($registerBtn))
+		else{
+            $this->load->view('home/register');
+		}
 
 	}
 

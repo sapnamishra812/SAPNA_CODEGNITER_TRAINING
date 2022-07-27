@@ -26,7 +26,7 @@ class User_model extends CI_Model{
 	$query = $this->db->get();
 	return $query->row();
   }
-  public function updateUser( $data,$cond){
+    public function updateUser( $data,$cond){
        $this->db->where($cond);
 	   $this->db->update("users", $data);
 	   if($this->db->affected_rows()>0){
@@ -38,7 +38,38 @@ class User_model extends CI_Model{
 			return 'some Error!!';
 	   }
 
-  }
+    }
+
+	/**check change password 
+	 *to check  data is present or not in session. this is same as checkProfileEmail() this function  f
+	 * if some function work same then used globle function name  which is used every controllers 
+	 * to get data infomation from session in the model part 
+	 */
+	 public function checkChangePassword($cond) {
+       $this->db->select("id");
+	   $this->db->from("users");
+	   $this->db->where("$cond");
+	   $query = $this->db->get();
+	   return $query->row();
+	 }
+
+	 /**for change password which update in db also 
+	  * this function also used as global bcoz  updateUser() is also same working
+	  */
+	 public function updateCurrentPassword($data , $cond) {
+
+		$this->db->where($cond);
+		$this->db->update("users", $data);
+		if($this->db->affected_rows()>0){
+		   //echo 'true';
+		   return 'true';
+		}
+		else{
+			 //echo 'some error';
+			 return 'some Error!!';
+		}
+          
+	 }
 }
 
 
