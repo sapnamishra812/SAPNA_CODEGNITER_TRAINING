@@ -44,7 +44,7 @@
                                                 <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="<?php echo site_url("Forgotpassword/forgot"); ?>">Forgot Password?</a>
+                                                <a class="small" href="<?php echo site_url("Home/forgotPassword"); ?>">Forgot Password?</a>
                                                 <button  type="submit" class="btn btn-primary" name="loginBtn">Login</button>
                                             </div>
                                         </form>

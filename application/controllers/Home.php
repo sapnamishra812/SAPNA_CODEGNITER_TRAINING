@@ -176,5 +176,41 @@ class Home extends CI_Controller {
 		}
 
 	}
+ 
+
+	/** working on FORGOT PASSWORD of login user */
+	 public function forgotPassword(){
+		$this->load->view('home/forgotPassword');
+
+	 }
+      /**click forgot form check validation  */
+	 public function forgotAction(){
+		$this->form_validation->set_rules('email', 'Email Address', 'required|trim|valid_email', array(
+			'required'=>'%s is required',
+			 
+		));
+
+		$forgotPasswordBtn = $this->input->post('forgotbtn'); 
+
+	    if(isset($forgotPasswordBtn)){
+               if($this->form_validation->run()==FALSE){
+                    $this->load->view('home/set_forgot_password');
+			   }
+			   else{
+                  redirect('Home/setForgotPassword/'.$data->user_id);
+			   }
+		}
+		else{
+			//$this->load->view('home/forgotPassword');
+			redirect('Home/');
+		}
+
+	 }
+
+    /**set forgot password to new password */
+    public function setForgotPassword($userId){
+          $data = array('userId'=>$userId);
+		$this->load->view('home/set_frogot_password', $data);
+	}
 
 }

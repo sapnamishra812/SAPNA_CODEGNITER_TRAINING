@@ -42,22 +42,26 @@ class User extends CI_Controller{
 				//'is_unique'  => 'This %s alread exist'
 				)
 	     );
-	   $this->form_validation->set_rules('user_img', 'Empty image', 'required');	 
+	   //$this->form_validation->set_rules('user_img', 'Empty image', 'required');	 
 	  
 
 	  $updateBtn = $this->input->post('profilebtn');
-    
-	  if(isset($updateBtn)) {
-		if($this->form_validation->run() == FALSE) {      
+	  $getUserImage = $this->User_model->checkProfileEmail("id ='".$this->session->userdata('user_id')."'"); 
+	  $image_name = $getUserImage->user_img;	// alway put db image it may be defaultor other image 	
+	  if(isset($updateBtn)) { 
+		//print_r($_POST);exit;
+		if($this->form_validation->run() == FALSE) {  
+			//print_r("hii");exit;    
 			/* $this->load->view('layouts/header');
 			// $this->load->view('layouts/sidenav');
 			// $this->load->view('Users/user');
 			// $this->load->view('layouts/footer');   when we used this bt at time  value is not come means profileSetting fnction again repeate*/
 	       $this->profileSetting(); //we without change this file fnction got to onther fnction and work
 		  // redirect('Users/profileSetting') ;//1$3 same. this time it's move the onther fnction and then it work 
-
+          
 		} /*if($this->form_validation->run() == FALSE) */
 		else {
+			//print_r("hello");exit;
 		   $email = $this->input->post('email');
 
 		   //check for dublicate error if no  error occre then goto  contine else go to profileSeeting page  
@@ -65,7 +69,7 @@ class User extends CI_Controller{
 		   
 		    if(empty($getUser)){
 			 //for error handling image
-			     $image_name = '';
+			   
 				if($_FILES['user_img']['error']==0) {
 					$config = array(
 
@@ -79,9 +83,9 @@ class User extends CI_Controller{
 					$this->load->library('upload', $config);
                     
 					if(!$this->upload->do_upload('user_img')){
-						$error = array('error' => $this->upload->display_errors());
-                          $this->session->set_flashdata('image_error', $error);
-						  $this->profileSetting();
+					//	$error = array('error' => $this->upload->display_errors());
+                          $this->session->set_flashdata('image_error',$this->upload->display_errors());
+						return  $this->profileSetting();
 						//return $this->load->view('users/user', $error);
 
 
@@ -90,6 +94,12 @@ class User extends CI_Controller{
                         $imageDetailArray = $this->upload->data();
 						//print_r($imageDetailArray);exit;
 						$image_name = $imageDetailArray['file_name'];
+
+						/**used unlink Old image */
+						
+						if($getUserImage->user_img!="default.png"){
+							unlink("./assets/uploads/users/".$getUserImage->user_img);
+						}
 					}
 				}/**if($_FILES['user_img']['error']==0) */
 				//for update all value which is in the form becase alll vale we want to get as it is only update

@@ -18,7 +18,8 @@
 		<div class="card mb-4">
 			<div class="card-header">
 				<i class="fas fa-user me-1"></i>
-				Profile setting | <?php if(!empty($this->session->flashdata('success_message'))) {echo $this->session->flashdata('success_message');} ?>
+				Update Your Profile | <?php if(!empty($this->session->flashdata('success_message'))) {echo $this->session->flashdata('success_message');} ?>
+				<?php if(!empty($this->session->flashdata('image_error'))) {echo $this->session->flashdata('image_error');} ?>
 			</div>
 			<?php if(isset($error_message) && !empty($error_message)){
 				echo $error_message;
@@ -90,8 +91,9 @@
 								   name="user_img" value="<?php if(!empty($userData->user_img)){ echo $userData->user_img; } ?>"/>
 						        <small class="form-text text-muted">Only .png, .jpg, .jpeg, .gif file extension allowed.</small>
 								</div>
-						   <span style="color:red;"><?php echo form_error('user_img'); ?></span>
+								<img src="<?php echo base_url(); ?>/assets/uploads/users/<?php if(!empty($userData->user_img)){echo $userData->user_img;} else{ echo "default.png";} ?>" height="100px" width="100px" alt="User Profile">
 					</div>
+					
 				</div>
 				<div class="col-md-4">
 						<div class="form-floating mb-3 mb-md-0">
