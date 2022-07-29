@@ -91,7 +91,7 @@
                                     <div class="card-footer text-center py-3">
                                         <div class="small"><a href="<?php echo site_url("Home"); ?>">Have an account? Go to login</a></div>
                                     </div>
-                                </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
