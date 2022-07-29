@@ -184,7 +184,7 @@ class Home extends CI_Controller {
 
 	 }
       /**click forgot form check validation  */
-	 public function forgotAction(){
+	 public function forgotPasswordAction(){
 		$this->form_validation->set_rules('email', 'Email Address', 'required|trim|valid_email', array(
 			'required'=>'%s is required',
 			 
@@ -193,24 +193,100 @@ class Home extends CI_Controller {
 		$forgotPasswordBtn = $this->input->post('forgotbtn'); 
 
 	    if(isset($forgotPasswordBtn)){
-               if($this->form_validation->run()==FALSE){
-                    $this->load->view('home/set_forgot_password');
-			   }
-			   else{
-                  redirect('Home/setForgotPassword/'.$data->user_id);
-			   }
+            if($this->form_validation->run()==FALSE){
+				      $this->load->view('home/forgotPassword');
+			}
+			else{
+				$email = $this->input->post('email');
+				$getUser=$this->Home_model->checkExistEmail("email='".$email."' ");
+				//print_r($this->db->last_query());exit;
+                    // print_r($getUser);exit;
+				if(!empty($getUser)){
+					  //print_r($email);exit;
+					   
+						//$data = $this->Home_model->checkExistEmail("email='".$email."' ");
+						redirect('Home/showPasswordLinkPage/'.$getUser->id);
+					 //present email is exist db or not 
+					 
+					
+				}
+				else{ 
+                     // print_r('hiii');exit;
+					//error show here not present in email not present in 
+					$this->session->set_flashdata('error_message', 'Email is not registerd.'); 
+					redirect('Home/forgotPassword');
+				}
+                 
+			}
 		}
 		else{
-			//$this->load->view('home/forgotPassword');
-			redirect('Home/');
+			//$this->load->view('home/forgotPassword');//redirect('Home/forgotPassword');
+
+			$this->load->view('home/forgotPassword');
 		}
+
+	 }
+	 /**paasowrd link page  */
+	 public function showPasswordLinkPage($userId){
+		$data = array('userId'=>$userId);
+		$this->load->view('home/forgotLinkPage',$data);
+
 
 	 }
 
     /**set forgot password to new password */
     public function setForgotPassword($userId){
           $data = array('userId'=>$userId);
-		$this->load->view('home/set_frogot_password', $data);
+		$this->load->view('home/set_forgot_password', $data);
 	}
+    
+	/**set password to check validation to change password successfully */
+	public function setForgotToNewPasswordAction($userId){
+		$this->form_validation->set_rules('new_password', 'New Password', 'trim|required');
+		$this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required');
 
+		$setnewBtn = $this->input->post('set_new_passwordbtn');
+	
+		if(!empty($_POST)){
+			//print_r('hii');exit;
+			//print_r($setnewBtn);exit;
+            // $getUSerData = $this->home_model->
+			 if($this->form_validation->run()==FALSE){
+				//print_r('hello1');exit;
+				$this->setForgotPassword($userId); 
+			 }
+			 else{
+				//print_r('hiii1');exit;
+				$new_password = $this->input->post('new_password');
+				$confirm_password = $this->input->post('confirm_password');
+			
+				
+                     if(md5($new_password)==md5($confirm_password)){
+						$dataArray = array(
+							'password'=>md5($confirm_password),
+							'modified'=>date('Y-m-d H:i:s')
+							);
+
+						$update = $this->Home_model->updateUserPassword($dataArray, " id='".$userId."'"); 
+						if($update=='true'){
+							$this->session->set_flashdata('success_message', ' New Password is set successfully');
+							redirect("Home/index");
+						}
+						else{
+							$this->session->set_flashdata('error_message', 'Something was wrong please try after some time.');
+							$this->setForgotPassword($userId);
+						}
+						
+					}
+					else{
+						$this->session->set_flashdata('error_message', "New password and confirm password does not matched");
+					    $this->setForgotPassword($userId);
+					}
+				}
+		}/*if(isset($setnewBtn)) =>check any variable presnt or not*/  
+		else{ 
+			// print_r('dsdd');exit;
+             redirect('Home/setForgotPassword/'.$userId);
+		}
+	}
 }

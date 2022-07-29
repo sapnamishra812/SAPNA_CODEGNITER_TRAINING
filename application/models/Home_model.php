@@ -38,4 +38,29 @@ class Home_model extends CI_Model{
 	return $last_id ;
 
    }
+    
+   /**Forgot Passowrd for email  exist or not */
+   public function checkExistEmail($cond){
+	$this->db->select("id, email"); 
+	$this->db->from('users'); 
+	$this->db->where($cond); 
+	$query = $this->db->get();
+	return $query->row();
+   }
+   
+
+   /**set New Password when forgot it  */
+   public function updateUserPassword($data,$cond){
+	$this->db->where($cond);
+	$this->db->update("users", $data);
+	if($this->db->affected_rows()>0){
+	   
+	   return 'true';
+	}
+	else{
+		 
+		 return 'some Error!!';
+	}
+
+   }
 }

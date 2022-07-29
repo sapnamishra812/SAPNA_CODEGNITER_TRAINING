@@ -18,26 +18,44 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Forgot Password</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Forgot Password</h3>
+									<?php echo $this->session->flashdata('success_message'); ?>
+				                           <?php echo $this->session->flashdata('error_message'); ?>
+								    </div>
                                     <div class="card-body">
                                         <!-- <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div> -->
-                                        <form method="post" action="<?php echo site_url("Home/forgotPasswordAction"); ?>">
-                                            <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" name="email" />
-                                                <label for="inputEmail">Email address</label>
-                                            </div>
-											<span class="text-danger"><?php echo form_error('email'); ?> <?php echo $this->session->flashdata('error_message'); ?></spna>
-											
-                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="<?php echo site_url("Home/setForgotPassword"); ?>">Go To Create New Passowrd</a>
-
-                                                <button class="btn btn-primary" type="submit" name="forgotbtn" >Submit</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="<?php echo site_url("Register/registerForm"); ?>">Return to login</a></div>
-                                    </div>
+                                        <form method="post" action="<?php echo site_url("Home/setForgotToNewPasswordAction/".$userId); ?>">
+											<div class="row mb-3">
+												<div class="col-md-12">
+													<div class="form-floating mb-3 mb-md-0">
+														<input  class="form-control" 
+																id="newPassword" 
+																type="password" 
+																placeholder="Enter your new password" 
+																name="new_password"
+																/>
+														<label for="newPassword">New Password</label>
+													</div>
+													<span class="text-danger"><?php echo form_error('new_password'); ?></span>
+												</div>
+											</div>
+											<div class="row mb-3">
+												<div class="col-md-12 ">
+													<div class="form-floating mb-3 mb-md-0">
+														<input  class="form-control" 
+																id="confirmPassword" 
+																type="password" 
+																placeholder="Enter your confirm  password" 
+																name="confirm_password"
+																/>
+														<label for="confirmPassword">Confirm Password</label>
+													</div>
+													<span class="text-danger"><?php echo form_error('confirm_password'); ?></span>
+												</div>
+											</div>
+										<div class="mt-4 ml-3 mb-0">
+											<button class="btn btn-primary"type="submit" name="set_new_passwordbtn">Submit</button>
+										</div>
                                 </div>
                             </div>
                         </div>
