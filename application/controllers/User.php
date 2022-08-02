@@ -8,7 +8,19 @@ class User extends CI_Controller{
 		//for Upload image or files ser this extension itis predefind librar
 		//$this->load->library('upload', $config);
 	}
-	 
+	public function index(){
+		$getAllUserData = $this->User_model->getUserData();
+		//print_r($getUserData);exit;
+		$data = array(
+             "heading"=>"users",
+			 "sub_heading"=>"user list",
+			 "userData"=>$getAllUserData 
+		);
+		$this->load->view('layouts/header');
+		 $this->load->view('layouts/sidenav');
+		 $this->load->view('users/user_list', $data);
+		 $this->load->view('layouts/footer');
+	}
 	public function profileSetting(){
 		//print_r($_SESSION);exit;
 		$getUserData = $this->User_model->getUserProfile("id = '".$this->session->userdata('user_id')."'");

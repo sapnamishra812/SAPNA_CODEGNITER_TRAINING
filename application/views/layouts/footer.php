@@ -16,5 +16,6 @@
         <script src="<?php echo base_url(); ?>/assets/js/scripts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="<?php echo base_url(); ?>/assets/js/datatables-simple-demo.js"></script>
+         <script src="<?php echo base_url(); ?>/assets/js/user_custome.js"></script>
     </body>
 </html>

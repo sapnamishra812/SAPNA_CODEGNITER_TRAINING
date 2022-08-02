@@ -76,6 +76,15 @@ class User_model extends CI_Model{
     //     $this->load->where
   
 	//  }
+
+
+	
+	public  function getUserData(){
+		$this->db->select("*");
+		$this->db->from('users');
+		$query = $this->db->get();
+		return $query->result_array();
+	 }
 }
 
 
