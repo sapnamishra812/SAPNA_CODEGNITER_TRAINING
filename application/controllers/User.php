@@ -217,4 +217,12 @@ class User extends CI_Controller{
                 redirect("User/changePassword");
 			}
 	}
+
+	/**Add addUserList fnctionality on list page  */
+	public function addUserList(){
+		$this->load->view('layouts/header');
+	   $this->load->view('layouts/sidenav');
+	   $this->load->view('users/add_user_list');
+	   $this->load->view('layouts/footer');
+	}
 }

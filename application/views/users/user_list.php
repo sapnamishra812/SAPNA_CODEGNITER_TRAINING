@@ -1,10 +1,18 @@
 <main>
                     <div class="container-fluid px-4">
                         <h1 class="mt-4"><?php echo  $heading ; ?></h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="<?php echo site_url('Maindashboard/index'); ?>">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Users</li>
-                        </ol>
+                        <div class="float">
+                            <div class="float-end">
+                               <a href="<?php echo site_url("User/addUserList"); ?>"><button class="btn btn-primary">Add Users</button></a>
+                            </div>
+                            <div>
+                                <ol class="breadcrumb mb-4">
+                                    <li class="breadcrumb-item"><a href="<?php echo site_url('Maindashboard/index'); ?>">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">Users</li>
+                                </ol>
+                            </div>  
+                        </div>
+                        
                     
                         <div class="card mb-4">
                             <div class="card-header">
@@ -53,26 +61,28 @@
                                                }elseif($value['status']=='inactive'){
                                                 $stsClass ='btn-danger';
                                                }
-                                               echo '<button class="btn btn-xs '.$stsClass.'" >'.ucfirst($value['status']).'</button>';
+                                               echo '<a class="changeStatus"><button class="btn btn-xs customStatus '.$stsClass.'" >'.ucfirst($value['status']).'</button></a>';
                                                 ?>
                                             </td>
 
-                                            <td><?php echo $value['address']; ?>
+                                            <td>
                                             <?php
                                                  $length = strlen($value['address']);
-                                                 if($length<100){
-                                                 $text= str_repeat(' ', 200-$length);
-                                                 str_repeat('&nbsp;', 5);
+                                                 if($length>100){
+                                                 $text= str_repeat('.. ', 100-$length);
+                                                 str_repeat('<br>...', 5);
                                                  }
                                                  else{
-                                                 $text = substr($value['address'], 0, 200);
+                                                 $text = substr($value['address'], 0, 50);
                                                  }
                                                  echo $text; // will print the text max and min to 100
                                                 ?> 
                                              </td>
-                                            <td><?php echo $value['user_img']; ?></td>
-                                            <td><a href="<?php echo site_url("Users/edit");?>"><button class="btn btn-primary btn-xs px-0 py-0 ">Edit</button></a>
-                                            <a href="<?php echo site_url("Users/delete");?>"><button class="btn btn-primary btn-xs px-0 py-0">Delete</button></a></td>
+                                            <td>
+                                               <img src="<?php  echo base_url().'/assets/uploads/users/'.$value['user_img'];?>" alt="User Profile" height="70px" width="60px">
+                                             </td>
+                                            <td><a href="<?php echo site_url("Users/edit");?>"><button class="btn btn-primary btn-xs rounded-pill customBtn">Edit</button></a>
+                                            <a href="<?php echo site_url("Users/delete");?>"><button class="btn btn-danger btn-xs rounded-pill customBtn">Delete</button></a></td>
                                            
                                         </tr>
 
