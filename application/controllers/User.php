@@ -225,4 +225,37 @@ class User extends CI_Controller{
 	   $this->load->view('users/add_user_list');
 	   $this->load->view('layouts/footer');
 	}
+
+
+	/** update Status function  */
+	 public function updateStatus(){
+		//print_r($_POST);exit;
+		$user_id = $this->input->post('user_id');
+		$getUser = $this->User_model->checkProfileEmail("id= '".$user_id."'");
+		//$user_status = $this->input->post('user_status');
+		//print_r($getUser);exit;
+		$status = $getUser->status =='active'? 'inactive':'active';
+		$data = array('status'=>$status);
+		$cond = "id='".$user_id."'";
+		$update = $this->User_model->updateStatus($data, $cond);
+		//print_r($update);
+		//echo $update;
+		 
+		if($status == 'active'){
+              $newClass= 'btn-success';
+			  $oldClass= 'btn-danger';
+		}else{
+			$newClass= 'btn-danger';
+			$oldClass= 'btn-success';
+		}
+		 
+        
+		if($update=='true'){
+			$dataArray = array('newClass'=>$newClass, 'oldClass'=>$oldClass);
+            echo json_encode($dataArray);exit;
+		}else{
+			echo 0;exit;
+		}
+         
+	 }
 }

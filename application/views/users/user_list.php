@@ -59,23 +59,25 @@
                                                 $stsClass ='btn-success';
 
                                                }elseif($value['status']=='inactive'){
-                                                $stsClass ='btn-danger';
+                                                $stsClass ="btn-danger";
                                                }
-                                               echo '<a class="changeStatus"><button class="btn btn-xs customStatus '.$stsClass.'" >'.ucfirst($value['status']).'</button></a>';
+                                               echo '<a class="changeUserStatus" data-status="'.$value['status'].'"data-userid="'.$value['id'].'">
+											   <button class="btn btn-xs statusBtn'.$value['id'].' '.$stsClass.'" >'.
+											   ucfirst($value['status']).'</button></a>';
                                                 ?>
                                             </td>
 
                                             <td>
-                                            <?php
-                                                 $length = strlen($value['address']);
-                                                 if($length>100){
-                                                 $text= str_repeat('.. ', 100-$length);
-                                                 str_repeat('<br>...', 5);
-                                                 }
-                                                 else{
-                                                 $text = substr($value['address'], 0, 50);
-                                                 }
-                                                 echo $text; // will print the text max and min to 100
+                                            <?php echo $value['address'];
+                                                //  $length = strlen($value['address']);
+                                                //  if($length>100){
+                                                //  $text= str_repeat('.. ', 100-$length);
+                                                //  str_repeat('<br>...', 5);
+                                                //  }
+                                                //  else{
+                                                //  $text = substr($value['address'], 0, 50);
+                                                //  }
+                                                //  echo $text; // will print the text max and min to 100
                                                 ?> 
                                              </td>
                                             <td>

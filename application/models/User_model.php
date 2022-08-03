@@ -20,7 +20,7 @@ class User_model extends CI_Model{
   /** update user profile   (using email check) */
 
   public function checkProfileEmail($cond){ //for update 2 parametr pass as argment 
-	$this->db->select("id ,email, user_img");
+	$this->db->select("id ,email, user_img ,status");
 	$this->db->from('users');
 	$this->db->where($cond);
 	$query = $this->db->get();
@@ -76,14 +76,26 @@ class User_model extends CI_Model{
     //     $this->load->where
   
 	//  }
-
-
-	
+ /** for change passowd check this model maybe */
 	public  function getUserData(){
 		$this->db->select("*");
 		$this->db->from('users');
 		$query = $this->db->get();
 		return $query->result_array();
+	 }
+
+	 /** user this model to check the status  */
+	 public function updateStatus($data, $cond=''){
+            if(!empty($cond)){
+				$this->db->where($cond);
+			}
+			$this->db->update("users", $data);
+			if($this->db->affected_rows()>0){
+				return 'true';
+			}
+			else{
+				return 'false';
+			}
 	 }
 }
 
