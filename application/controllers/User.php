@@ -218,13 +218,7 @@ class User extends CI_Controller{
 			}
 	}
 
-	/**Add addUserList fnctionality on list page  */
-	public function addUserList(){
-		$this->load->view('layouts/header');
-	   $this->load->view('layouts/sidenav');
-	   $this->load->view('users/add_user_list');
-	   $this->load->view('layouts/footer');
-	}
+	
 
 
 	/** update Status function  */
@@ -232,30 +226,128 @@ class User extends CI_Controller{
 		//print_r($_POST);exit;
 		$user_id = $this->input->post('user_id');
 		$getUser = $this->User_model->checkProfileEmail("id= '".$user_id."'");
-		//$user_status = $this->input->post('user_status');
-		//print_r($getUser);exit;
-		$status = $getUser->status =='active'? 'inactive':'active';
+		
+		$status = ($getUser->status=='active') ? 'inactive':'active';
 		$data = array('status'=>$status);
 		$cond = "id='".$user_id."'";
 		$update = $this->User_model->updateStatus($data, $cond);
-		//print_r($update);
-		//echo $update;
-		 
-		if($status == 'active'){
+	
+		if($status=='active'){
               $newClass= 'btn-success';
 			  $oldClass= 'btn-danger';
 		}else{
 			$newClass= 'btn-danger';
 			$oldClass= 'btn-success';
 		}
-		 
-        
+		     
 		if($update=='true'){
-			$dataArray = array('newClass'=>$newClass, 'oldClass'=>$oldClass);
-            echo json_encode($dataArray);exit;
+			$dataArray = array('newClass'=>$newClass, 'oldClass'=>$oldClass, 'status'=>ucfirst($status), 'success'=>'1');
+           
 		}else{
-			echo 0;exit;
+			$dataArray = array('success'=>'0');
 		}
          
+		echo json_encode($dataArray);exit;
 	 }
+
+
+	 /**Add addUserList fnctionality on list page ,
+	 * Add User ->new user form add/insert by admine */
+	
+	public function addUser(){
+		$data=array(
+			"heading"=>"Add Users",
+			"sub_heading"=>"Add User Here!",
+		);
+		$this->load->view('layouts/header');
+		$this->load->view('layouts/sidenav');
+		$this->load->view('users/add_user_list',$data);
+		$this->load->view('layouts/footer');
+	}
+
+	/**AddNew User record by addmin and check all functionality here  */
+      public function addUserAction(){
+         $first_name = $this->input->post('first_name');
+		 $last_name = $this->input->post('last_name');
+		 $address = $this->input->post('address');
+		 $email = $this->input->post('email');
+		 $gender = $this->input->post('gender');
+		 $city = $this->input->post('city');
+		 $state = $this->input->post('state');
+		 $hobbies = $this->input->post('hobbies');
+		 $addUserBtn = $this->input->post('add_userbtn');
+
+		 //apply validation 
+		 $this->form_validation->set_rules('first_name', 'First Name', 'trim|required|', array(
+			'required'=> 'Please enter %s'
+		 ));
+		 $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|', array(
+			'required'=> 'Please enter %s'
+		 ));
+		 $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique(users.email)', array(
+			'required'=> 'Please enter %s',
+			'is_unique'=> 'This %s is already exist.'
+		 ));
+      
+		  $this->form_validation->set_rules('address', 'Address', 'trim|required|min_length[6]|max_length[255]');
+		   $this->form_validation->set_rules('city', 'City', 'required');
+		   $this->form_validation->set_rules('state', 'State', 'required');
+		   $this->form_validation->set_rules('gender', 'Gender', 'required');
+		   $this->form_validation->set_rules('hobbies', 'Hobbies', 'required');
+		   $this->form_validation->set_rules('zip', 'Zip', 'trim|required|max_length[6]');
+
+		   if(isset($addUserBtn)){
+			 
+                  if($this->form_validation->run() == FALSE){
+                           $this->addUser();
+				  }
+				  else{
+					$image_name='default.png'
+					if($_FILES['user_profile']['error']==0) {
+						$config = array(
+	
+							'upload_path' => './assets/uploads/users/',
+							'allowed_types' => "gif|jpg|png|jpeg",
+							//'overwrite' =>TRUE,
+							'max_size' =>"2000" ,
+							'max_height' => "1500", 
+							 'max_width' => '1500'
+						);
+						$this->load->library('upload', $config);
+						
+						if(!$this->upload->do_upload('user_profile')){
+							  $this->session->set_flashdata('upload_error',$this->upload->display_errors());
+							return  $this->addUser();
+						
+						}
+						else {
+							$imageDetailArray = $this->upload->data();
+							$image_name = $imageDetailArray['file_name'];
+						}
+					}
+					
+					$dataArray=array(
+						'name' => $first_name.' '.$last_name,
+						'email'=> $email,
+						'address' => $address,
+						'user_img' =>$image_name,
+						'gender'=> $gender,
+						'hobbies'=> $hobbies,
+						'city'=> $city,
+						'state'=> $state,
+						'zip'=>$zip,
+						'created' => date('Y-m-d H:i:s')
+		            ); 
+					$update = $this->User_model->insertData($dataArray, " id='".$this->session->userdata('user_id')."'"); 
+					$this->session->set_flashdata('success_message', ' User is update successflly');
+					redirect("User/index");
+
+				  }
+		   }
+		   else{
+			 redirect('User/addUser');
+		   }
+		   
+	  }
+	
 }

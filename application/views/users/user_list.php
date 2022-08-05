@@ -1,24 +1,22 @@
 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4"><?php echo  $heading ; ?></h1>
+                        <h1 class="mt-4"><?php echo $heading ; ?></h1>
                         <div class="float">
-                            <div class="float-end">
-                               <a href="<?php echo site_url("User/addUserList"); ?>"><button class="btn btn-primary">Add Users</button></a>
-                            </div>
-                            <div>
-                                <ol class="breadcrumb mb-4">
-                                    <li class="breadcrumb-item"><a href="<?php echo site_url('Maindashboard/index'); ?>">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Users</li>
-                                </ol>
-                            </div>  
+							<ol class="breadcrumb mb-4">
+								<li class="breadcrumb-item"><a href="<?php echo site_url('Maindashboard/index'); ?>" class="breadcrumb_anchor">Dashboard</a></li>
+								<li class="breadcrumb-item active " >Users</li>
+							</ol> 
                         </div>
                         
-                    
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-users me-1"></i>
-                                <?php echo  $sub_heading ; ?>
+                                <?php echo $sub_heading ; ?>
+								<div class="float-end">
+                               <a href="<?php echo site_url("User/addUser"); ?>"><button class="btn btn-primary">Add Users</button></a>
                             </div>
+                            </div>
+							
                             <div class="card-body">
                                 <table id="userTableId">
                                     <thead>
@@ -62,22 +60,14 @@
                                                 $stsClass ="btn-danger";
                                                }
                                                echo '<a class="changeUserStatus" data-status="'.$value['status'].'"data-userid="'.$value['id'].'">
-											   <button class="btn btn-xs statusBtn'.$value['id'].' '.$stsClass.'" >'.
-											   ucfirst($value['status']).'</button></a>';
+											   <button class="btn btn-xs status_btn  statusBtn'.$value['id'].' '.$stsClass.'" >'.ucfirst($value['status']).'</button></a>';
                                                 ?>
                                             </td>
 
                                             <td>
-                                            <?php echo $value['address'];
-                                                //  $length = strlen($value['address']);
-                                                //  if($length>100){
-                                                //  $text= str_repeat('.. ', 100-$length);
-                                                //  str_repeat('<br>...', 5);
-                                                //  }
-                                                //  else{
-                                                //  $text = substr($value['address'], 0, 50);
-                                                //  }
-                                                //  echo $text; // will print the text max and min to 100
+                                            <?php 
+                                                 $newAddress = strlen($value['address'])>30 ? substr($value['address'],0,30)."..." : $value['address'] ;
+												 echo $newAddress;
                                                 ?> 
                                              </td>
                                             <td>
@@ -89,8 +79,7 @@
                                         </tr>
 
                                         <?php $i++; } ?>
-                                     
-                                        
+                                    
                                     </tbody>
                                 </table>
                             </div>

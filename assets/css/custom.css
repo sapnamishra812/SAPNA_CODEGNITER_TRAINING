@@ -10,3 +10,20 @@ margin-left: 5px;
     width: 70px;
     padding: 0px;  
 }
+.status_btn{
+	height:28px;
+    width: 70px;
+    padding: 0px;
+}
+
+.breadcrumb_anchor{
+	color: #80848b;
+    text-decoration: none;
+}
+.error{
+	color: #ff0000;
+}
+.required:after {
+    content:" *";
+    color: #ff0000;
+  }
