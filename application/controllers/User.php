@@ -253,12 +253,19 @@ class User extends CI_Controller{
 
 	 /**Add addUserList fnctionality on list page ,
 	 * Add User ->new user form add/insert by admine */
-	
+	/**Add User */
 	public function addUser(){
+		$getStates = $this->User_model->getStatesData("status='active'");
+		//print_r($getStates);exit; //=> o/p array();
+		$getCities = $this->User_model->getCitiesData("status='active'");
 		$data=array(
 			"heading"=>"Add Users",
 			"sub_heading"=>"Add User Here!",
+			"states"=>$getStates,
+			"cities"=>$getCities 
+
 		);
+		//print_r($data);exit;
 		$this->load->view('layouts/header');
 		$this->load->view('layouts/sidenav');
 		$this->load->view('users/add_user_list',$data);
@@ -275,26 +282,27 @@ class User extends CI_Controller{
 		 $city = $this->input->post('city');
 		 $state = $this->input->post('state');
 		 $hobbies = $this->input->post('hobbies');
+		 $zip = $this->input->post('zip');
 		 $addUserBtn = $this->input->post('add_userbtn');
 
 		 //apply validation 
-		 $this->form_validation->set_rules('first_name', 'First Name', 'trim|required|', array(
-			'required'=> 'Please enter %s'
-		 ));
-		 $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|', array(
-			'required'=> 'Please enter %s'
-		 ));
-		 $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique(users.email)', array(
+		 $this->form_validation->set_rules('first_name', 'First Name', 'trim|required', array(
 			'required'=> 'Please enter %s',
-			'is_unique'=> 'This %s is already exist.'
+		 ));
+		 $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required', array(
+			'required'=> 'Please enter %s',
+		 ));
+		 $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[users.email]', array(
+			'required'=> 'Please enter %s',
+			'is_unique'=> 'This %s is already exist.',
 		 ));
       
-		  $this->form_validation->set_rules('address', 'Address', 'trim|required|min_length[6]|max_length[255]');
-		   $this->form_validation->set_rules('city', 'City', 'required');
-		   $this->form_validation->set_rules('state', 'State', 'required');
+		 // $this->form_validation->set_rules('address', 'Address', 'trim|required|min_length[6]|max_length[255]');
+		   //$this->form_validation->set_rules('city', 'City', 'required');
+		  // $this->form_validation->set_rules('state', 'State', 'required');
 		   $this->form_validation->set_rules('gender', 'Gender', 'required');
-		   $this->form_validation->set_rules('hobbies', 'Hobbies', 'required');
-		   $this->form_validation->set_rules('zip', 'Zip', 'trim|required|max_length[6]');
+		   //$this->form_validation->set_rules('hobbies', 'Hobbies', 'required');
+		   //$this->form_validation->set_rules('zip', 'Zip', 'trim|required|max_length[6]');
 
 		   if(isset($addUserBtn)){
 			 
@@ -302,7 +310,7 @@ class User extends CI_Controller{
                            $this->addUser();
 				  }
 				  else{
-					$image_name='default.png'
+					$image_name='default.png';
 					if($_FILES['user_profile']['error']==0) {
 						$config = array(
 	
@@ -336,10 +344,14 @@ class User extends CI_Controller{
 						'city'=> $city,
 						'state'=> $state,
 						'zip'=>$zip,
+						'status'=>'active',
 						'created' => date('Y-m-d H:i:s')
 		            ); 
-					$update = $this->User_model->insertData($dataArray, " id='".$this->session->userdata('user_id')."'"); 
-					$this->session->set_flashdata('success_message', ' User is update successflly');
+
+					$addNewRecord = $this->User_model->insertData($dataArray, " id='".$this->session->userdata('user_id')."'"); 
+					//print_r($addNewRecord);exit;
+					
+					$this->session->set_flashdata('success_message', 'New User Added Successflly');
 					redirect("User/index");
 
 				  }

@@ -25,6 +25,8 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>status</th>
+											<th>State</th>
+											<th>City</th>
                                             <th>Address</th>
                                             <th>Profile</th>
                                             <th>Action</th>
@@ -34,11 +36,11 @@
                                         <tr> 
                                             <th>Sr no.</th>
                                             <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>Email</th>
+                                            <th>status</th>
+                                            <th>State</th>
+                                            <th>Address </th>
+                                            <th>Action</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -56,14 +58,19 @@
                                                if($value['status']=='active'){
                                                 $stsClass ='btn-success';
 
-                                               }elseif($value['status']=='inactive'){
+                                               }else if($value['status']=='inactive'){
                                                 $stsClass ="btn-danger";
                                                }
                                                echo '<a class="changeUserStatus" data-status="'.$value['status'].'"data-userid="'.$value['id'].'">
 											   <button class="btn btn-xs status_btn  statusBtn'.$value['id'].' '.$stsClass.'" >'.ucfirst($value['status']).'</button></a>';
                                                 ?>
                                             </td>
-
+                                            <td>
+												<?php echo  $value['state'];?>
+											</td>
+											<td>
+												<?php echo $value['city']?>
+											</td>
                                             <td>
                                             <?php 
                                                  $newAddress = strlen($value['address'])>30 ? substr($value['address'],0,30)."..." : $value['address'] ;

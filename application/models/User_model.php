@@ -97,11 +97,28 @@ class User_model extends CI_Model{
 				return 'false';
 			}
 	    }
-
+   /**Add new User by admine  */
 	public function	insertData($data){
 		$this->db->insert("users", $data);
 		$last_id =$this->db->insert_id();
 		return $last_id;
+	}
+	
+    /**Fetch  state */
+	public function getStatesData($cond){
+        $this->db->select("status, state_name");
+		$this->db->from('states');
+		$this->db->where($cond);
+		$query = $this->db->get();
+		return $query->result_array();
+	}
+    /**fetch citites */
+	public function getCitiesData($cond){
+		$this->db->select("status, city_name");
+		$this->db->from('cities');
+		$this->db->where($cond);
+		$query = $this->db->get();
+		return $query->result_array();
 	}
 }
 

@@ -12,7 +12,7 @@
 			<div class="card mb-4">
 				<div class="card-header">
 						<i class="fas fa-user"></i>
-						 <?php echo $sub_heading ;?>   <?php echo 'gg'; ?>
+						 <?php echo $sub_heading ;?>  <?php echo $this->session->flashdata('success_message'); ?>
 				</div>
 				<div class="card-body">
 					<form method="post"  action="<?php echo site_url("User/addUserAction"); ?>" enctype="multipart/form-data" >
@@ -47,7 +47,7 @@
 								   value="<?php echo set_value('email'); ?>" >
 						</div>
 						<div class="form-group purple-border">
-								<label for="address">Address </label><span class="error"><?php echo form_error('address');?></span>
+								<label for="address">Address </label>
 								<textarea class="form-control" 
 								          id="address" 
 										  rows="3" 
@@ -60,19 +60,16 @@
 					
 						<div class="row">
 						        <div class="form-group col-4">
-									<label for="inputState">State </label><span class="error"><?php echo form_error('state'); ?></span>
+									<label for="inputState">State </label>
 									<select id="inputState" class="custom-select my-1 mr-sm-2 form-control" name="state" >
-										<option  value="0" selected >Choose State</option>
-										<option value="1">Maharastra</option>
-										<option  value="2">Panjab</option>
-										<option  value="3">Gujrat</option>
-										<option  value="4">Goa</option>
-										<option  value="5">Guwathi</option>
-										<option  value="6">UP</option>
+										<option  value="0" selected >Select State</option>
+										<?php if(!empty($states)){ foreach($states as $state) {?>
+											<option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
+											<?php }}?>
 									</select>
 								</div>
 								<div class="form-group col-4">
-									<label for="inputCity">City </label><span class="error"><?php echo form_error('city'); ?></span>
+									<label for="inputCity">City </label>
 									<select id="inputCity" class="form-control" name="city">
 										<option value="0" selected>Choose City</option>
 										<option value="1">Mumbai</option>
@@ -85,19 +82,19 @@
 								</div>
 								
 								<div class="form-group col-2">
-									<label for="inputZip">Zip </label><span class="error"><?php echo form_error('zip'); ?></span>
+									<label for="inputZip">Zip </label>
 									<input type="text" class="form-control" id="inputZip" name="zip">
 								</div>
 						</div>
 						<div class="row">
 							<div class="form-group col-4 mt-2">
-								<label for="gender" class="required">Gender: <span class="error"><?php echo form_error('gender'); ?></span></label>
+								<label for="gender" class="required">Gender: </label><span class="error"><?php echo form_error('gender'); ?></span>
 								<label class="radio-inline form-check-inline"><input type="radio" class="form-check-input px-1" value="male" name="gender">Male</label>
 								<label  class="radio-inline form-check-inline"><input type="radio" class="form-check-input px-1 ml-1" value="female" name="gender">Female</label>
 								<label  class="radio-inline form-check-inline"><input type="radio" class="form-check-input px-1 ml-1" value="other" name="gender">Other</label>
 							</div>
 							<div class="form-group col-8 mt-2">
-								<label for="hobbies">Hobbies: </label> <span class="error"> <?php echo form_error('hobbies'); ?></span>
+								<label for="hobbies">Hobbies: </label> 
 								<div class="form-check form-check-inline">
 										<input class="form-check-input" type="checkbox" id="val1" value="option1" name="hobbies">
 										<label class="form-check-label" for="val1">Reading</label>
