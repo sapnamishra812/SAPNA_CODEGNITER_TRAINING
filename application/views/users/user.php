@@ -19,7 +19,7 @@
 			<div class="card-header">
 				<i class="fas fa-user me-1"></i>
 				Update Your Profile | <?php if(!empty($this->session->flashdata('success_message'))) {echo $this->session->flashdata('success_message');} ?>
-				<?php if(!empty($this->session->flashdata('image_error'))) {echo $this->session->flashdata('image_error');} ?>
+				<span class='error'><?php if(!empty($this->session->flashdata('image_error'))) {echo $this->session->flashdata('image_error');} ?></span>
 			</div>
 			<?php if(isset($error_message) && !empty($error_message)){
 				echo $error_message;

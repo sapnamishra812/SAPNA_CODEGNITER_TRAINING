@@ -8,9 +8,9 @@ class User_model extends CI_Model{
 	// public function checkUserUpdate(){
 	// }
 
-	/**Login */
+	/**Login  after set UserProfile*/
    public  function getUserProfile($cond){
-     $this->db->select("id, name, email, address, user_img");
+     $this->db->select("id, name, email, address, user_img, gender, address,");
 	 $this->db->from('users');
 	 $this->db->where($cond);
 	 $query = $this->db->get();
@@ -77,10 +77,16 @@ class User_model extends CI_Model{
   
 	//  }
  /** for change passowd check this model maybe */
-	public  function getUserData(){
-		$this->db->select("*");
+	public  function getUserData($cond){
+		$this->db->select("users.*,cities.city_name,states.state_name");
 		$this->db->from('users');
+		$this->db->join('cities','users.city_id=cities.id','left');
+		$this->db->join('states','users.state_id=states.id','left');
+		$this->db->where($cond);
+		$this->db->order_by("users.id", 'desc');
 		$query = $this->db->get();
+		//print_r($query);exit;
+	//	print_r($this->db->last_query()); exit; //SELECT `users`.*, `cities`.`city_name`, `states`.`state_name` FROM `users` LEFT JOIN `cities` ON `users`.`city_id`=`cities`.`id` LEFT JOIN `states` ON `users`.`state_id`=`states`.`id`
 		return $query->result_array();
 	 }
 
@@ -96,6 +102,8 @@ class User_model extends CI_Model{
 			else{
 				return 'false';
 			}
+			//$this->db->last_query();exit;
+
 	    }
    /**Add new User by admine  */
 	public function	insertData($data){
@@ -106,7 +114,7 @@ class User_model extends CI_Model{
 	
     /**Fetch  state */
 	public function getStatesData($cond){
-        $this->db->select("status, state_name");
+        $this->db->select("id,status,state_name");
 		$this->db->from('states');
 		$this->db->where($cond);
 		$query = $this->db->get();
@@ -114,11 +122,54 @@ class User_model extends CI_Model{
 	}
     /**fetch citites */
 	public function getCitiesData($cond){
-		$this->db->select("status, city_name");
+		$this->db->select("id,status,city_name");
 		$this->db->from('cities');
 		$this->db->where($cond);
 		$query = $this->db->get();
 		return $query->result_array();
+	}
+
+	/**view page */
+	public function getUserView($cond){
+		//print_r($this->db->last_query($cond));exit;
+		$this->db->select("users.*,cities.city_name,states.state_name");
+		$this->db->from('users');
+		$this->db->join('cities','users.city_id=cities.id','left');
+		$this->db->join('states','users.state_id=states.id','left');
+		$this->db->where($cond);
+		$query = $this->db->get();
+		return $query->row();
+
+	}
+
+	/**Delete ser */
+
+	public function updatDeleteuser($data, $cond=''){
+		if(!empty($cond)){
+			$this->db->where($cond);
+		}
+		$this->db->update("users", $data);
+		if($this->db->affected_rows()>0){
+			return 'true';
+		}
+		else{
+			return 'false';
+		}
+	}
+	public function editPage($cond){
+		$this->db->select("users.*,cities.city_name,states.state_name");
+		$this->db->from('users');
+		$this->db->join('cities','users.city_id=cities.id','left');
+		$this->db->join('states','users.state_id=states.id','left');
+		$this->db->where($cond);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	//edit page updateEditPage
+	public function updateEditPage($cond){
+		
+
 	}
 }
 

@@ -26,4 +26,14 @@ margin-left: 5px;
 .required:after {
     content:" *";
     color: #ff0000;
-  }
+}
+
+.img{
+    height:60px; 
+    width:60px;
+    border-radius:50% !important; 
+}
+
+.sccMsg{
+    color: #05a952;  
+}

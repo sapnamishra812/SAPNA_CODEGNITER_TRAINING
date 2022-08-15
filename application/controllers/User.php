@@ -9,7 +9,7 @@ class User extends CI_Controller{
 		//$this->load->library('upload', $config);
 	}
 	public function index(){
-		$getAllUserData = $this->User_model->getUserData();
+		$getAllUserData = $this->User_model->getUserData("users.is_delete='0' and users.id!='".$this->session->userdata('user_id')."'");
 		//print_r($getUserData);exit;
 		$data = array(
              "heading"=>"users",
@@ -225,8 +225,9 @@ class User extends CI_Controller{
 	 public function updateStatus(){
 		//print_r($_POST);exit;
 		$user_id = $this->input->post('user_id');
+		//print_r($_POST);exit;
 		$getUser = $this->User_model->checkProfileEmail("id= '".$user_id."'");
-		
+		//print_r($getUser);exit;
 		$status = ($getUser->status=='active') ? 'inactive':'active';
 		$data = array('status'=>$status);
 		$cond = "id='".$user_id."'";
@@ -258,11 +259,16 @@ class User extends CI_Controller{
 		$getStates = $this->User_model->getStatesData("status='active'");
 		//print_r($getStates);exit; //=> o/p array();
 		$getCities = $this->User_model->getCitiesData("status='active'");
+		//print_r($getCities);exit;
+		$getUserData = $this->User_model->getUserProfile("id = '".$this->session->userdata('user_id')."'");
+		
+		
 		$data=array(
 			"heading"=>"Add Users",
 			"sub_heading"=>"Add User Here!",
 			"states"=>$getStates,
-			"cities"=>$getCities 
+			"cities"=>$getCities ,
+			'userData'=>$getUserData,
 
 		);
 		//print_r($data);exit;
@@ -274,42 +280,47 @@ class User extends CI_Controller{
 
 	/**AddNew User record by addmin and check all functionality here  */
       public function addUserAction(){
+		//print_r($_POST);exit;
          $first_name = $this->input->post('first_name');
 		 $last_name = $this->input->post('last_name');
 		 $address = $this->input->post('address');
 		 $email = $this->input->post('email');
 		 $gender = $this->input->post('gender');
-		 $city = $this->input->post('city');
 		 $state = $this->input->post('state');
+		 $city = $this->input->post('city');
 		 $hobbies = $this->input->post('hobbies');
 		 $zip = $this->input->post('zip');
 		 $addUserBtn = $this->input->post('add_userbtn');
 
 		 //apply validation 
-		 $this->form_validation->set_rules('first_name', 'First Name', 'trim|required', array(
+		 $this->form_validation->set_rules('first_name', 'First Name', 'trim|required|alpha', array(
 			'required'=> 'Please enter %s',
+		     'alpha'=>'only letter allow',
 		 ));
-		 $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required', array(
+		 $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|alpha', array(
 			'required'=> 'Please enter %s',
+			'alpha'=>'only letters allow',
 		 ));
 		 $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|is_unique[users.email]', array(
 			'required'=> 'Please enter %s',
 			'is_unique'=> 'This %s is already exist.',
+			'valid_email'=> 'please enter valid %s',
 		 ));
       
-		 // $this->form_validation->set_rules('address', 'Address', 'trim|required|min_length[6]|max_length[255]');
+		 //$this->form_validation->set_rules('address', 'Address', 'trim');
 		   //$this->form_validation->set_rules('city', 'City', 'required');
 		  // $this->form_validation->set_rules('state', 'State', 'required');
 		   $this->form_validation->set_rules('gender', 'Gender', 'required');
 		   //$this->form_validation->set_rules('hobbies', 'Hobbies', 'required');
-		   //$this->form_validation->set_rules('zip', 'Zip', 'trim|required|max_length[6]');
-
+		  $this->form_validation->set_rules('zip', 'Zip', 'trim|min_length[4]|max_length[6]|numeric');
+          //print_r($addUserBtn);exit;
 		   if(isset($addUserBtn)){
-			 
+			
                   if($this->form_validation->run() == FALSE){
                            $this->addUser();
 				  }
 				  else{
+					
 					$image_name='default.png';
 					if($_FILES['user_profile']['error']==0) {
 						$config = array(
@@ -324,7 +335,8 @@ class User extends CI_Controller{
 						$this->load->library('upload', $config);
 						
 						if(!$this->upload->do_upload('user_profile')){
-							  $this->session->set_flashdata('upload_error',$this->upload->display_errors());
+							//print_r($this->upload->display_errors());exit;
+							  $this->session->set_flashdata('file_error',$this->upload->display_errors());
 							return  $this->addUser();
 						
 						}
@@ -333,16 +345,19 @@ class User extends CI_Controller{
 							$image_name = $imageDetailArray['file_name'];
 						}
 					}
-					
+					$newHobbies ='';
+					if(!empty($hobbies)){
+						$newHobbies = implode(",",$hobbies);
+					}
 					$dataArray=array(
 						'name' => $first_name.' '.$last_name,
 						'email'=> $email,
 						'address' => $address,
 						'user_img' =>$image_name,
 						'gender'=> $gender,
-						'hobbies'=> $hobbies,
-						'city'=> $city,
-						'state'=> $state,
+						'hobbies'=>$newHobbies,
+						'state_id'=> $state,
+						'city_id'=> $city,
 						'zip'=>$zip,
 						'status'=>'active',
 						'created' => date('Y-m-d H:i:s')
@@ -351,15 +366,111 @@ class User extends CI_Controller{
 					$addNewRecord = $this->User_model->insertData($dataArray, " id='".$this->session->userdata('user_id')."'"); 
 					//print_r($addNewRecord);exit;
 					
-					$this->session->set_flashdata('success_message', 'New User Added Successflly');
+					$this->session->set_flashdata('sccess_msg', 'New User Added Successflly');
 					redirect("User/index");
 
 				  }
 		   }
 		   else{
+			
 			 redirect('User/addUser');
 		   }
 		   
 	  }
-	
+
+	  /** to load view page  */
+	  public function view($id){
+		 $id= base64_decode($id);
+		$getData = $this->User_model->getUserView("users.id='".$id."'");
+		//print_r($getData);exit;
+		$data=array(
+			'userData'=>$getData,
+			'heading'=>'View User',
+			'sub_heading'=>"Show view user",
+		);
+		$this->load->view('layouts/header');
+		$this->load->view('layouts/sidenav');
+		$this->load->view('users/user_view',$data);
+		$this->load->view('layouts/footer');
+	  }
+
+	  /**delete Fnction btn */
+	  public function deleteUser(){
+		//print_r($_POST);exit;
+         $userIdDelete = $this->input->post('user_id');
+		 $data=array('is_delete'=>1);
+		$userUpdate=$this->User_model->updatDeleteuser($data,"id='".$userIdDelete."'");
+	 //  print_r($userUpdate);exit;
+	 $this->session->set_flashdata('sccess_msg', "Delete successfully!!!");
+	      if($userUpdate=='true'){
+			echo 1;exit;
+		  }
+		  else{
+			 echo 0;exit;
+		  }
+	   }
+
+
+	   /**Edit ser */
+	   public function edit($id){
+		$id1 = base64_decode($id);
+		$editData = $this->User_model->editPage("users.id= '".$id1."'");
+       // print_r($editData);exit;
+
+		$arrayData = array(
+			'userData'=>$editData ,
+			'heading'=> 'Edit Page',
+			'sub_heading'=> 'Edit User Page!!'
+		);
+
+		$this->load->view('layouts/header');
+		$this->load->view('layouts/sidenav');
+		$this->load->view('users/editPage',	$arrayData);
+		$this->load->view('layouts/footer');
+	   }
+
+
+	   /*** edit page action */
+	   public function editUserAction($id){
+		$id = base64_decode($id);
+            //print_r($_POST);exit;
+			//print_r($id);exit;
+		$this->form_validation->set_rules('fname', 'First Name', 'required|trim|alpha', array(
+			'required'=> 'please enter %s',
+			'alpha' => 'only alphabates is allowed'
+	   ));
+	   $this->form_validation->set_rules('lname', 'Last Name', 'trim|required|alpha', array(
+		 'required'=> 'please enter %s',
+		 'alpha' => 'only alphabates is allowed'));
+	   $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email',
+			 array(
+				 'required'   => 'You have not provided %s',
+				 //'is_unique'  => 'This %s alread exist'
+				 )
+		  );
+		  $this->form_validation->set_rules('gender', 'Gender', 'required');
+		  $this->form_validation->set_rules('zip', 'Zip', 'trim|min_length[4]|max_length[6]|numeric');
+          $Edit_userbtn=$this->input->post('edit_userbtn');
+
+		  if(isset($Edit_userbtn)){
+                if($this->form_validation->run()==FALSE){
+					$this->edit();
+				}
+		  }
+		  else{
+                
+			$first_name = $this->input->post('first_name');
+			$last_name = $this->input->post('last_name');
+			$email = $this->input->post('email');
+			$address = $this->input->post('address');
+			$zip = $this->input->post('zip');
+			$gender = $this->input->post('gender');
+			$state = $this->input->post('state');
+			$city = $this->input->post('city');
+			$hobbies = $this->input->post('hobbies');
+			
+			$editData = $this->User_model->updateEditPage("id = '".$id."'");
+		  }
+
+	   }
 }
