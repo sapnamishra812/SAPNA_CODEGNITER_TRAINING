@@ -72,7 +72,7 @@
 									<select id="inputState" class="custom-select my-1 mr-sm-2 form-control" name="state" >
 										<option  value="0" selected >Select State</option>
 										<?php if(!empty($states)){foreach($states as $state){?>
-											<option value="<?php echo $state['id'];?>" <?php if($userData->$state_id==$state['id']){
+											<option value="<?php echo $state['id'];?>" <?php if($userData->state_id==$state['id']){
 												echo 'selected';
 											}?>><?php echo $state['state_name']; ?></option>
 											<?php }}?>
@@ -83,7 +83,7 @@
 									<select id="inputCity" class="form-control" name="city">
 										<option value="0" selected>Select City</option>
 										<?php if(!empty($cities)){foreach($cities as $city){ ?>
-											<option value="<?php echo $city['id'];?>" <?php if($userData->$city_id==$city['id']){echo 'selected';}?>><?php echo $city['city_name']; ?></option>
+											<option value="<?php echo $city['id'];?>" <?php if($userData->city_id==$city['id']){echo 'selected';}?>><?php echo $city['city_name']; ?></option>
 											<?php }}?>
 									</select>
 								</div>
@@ -133,7 +133,7 @@
 											   id="val1" 
 											   value="reading" 
 											   name="hobbies[]"
-											   <?php if(is_array($hobbies[0])){if(in_array('reading',$hobbies[0])){echo 'checked';}}?>>
+											   <?php if(is_array($hobbies)){if(in_array('reading',$hobbies)){echo 'checked';}}?>>
 										<label class="form-check-label" for="val1">Reading</label>
 									</div>
 									<div class="form-check form-check-inline">
@@ -142,7 +142,7 @@
 											   id="val2" 
 											   value="singing"  
 											   name="hobbies[]" 
-											   <?php if(is_array($hobbies[1])){if(in_array('singing', $hobbies[1])){echo 'checked';}}?>> 
+											   <?php if(is_array($hobbies)){if(in_array('singing', $hobbies)){echo 'checked';}}?>> 
 										<label class="form-check-label" for="val2">Singing</label>
 									</div>
 									<div class="form-check form-check-inline">
@@ -151,7 +151,7 @@
 											   id="val3" 
 											   value="dance"  
 											   name="hobbies[]"
-											 <?php if(is_array($hobbies[2])){if(in_array('dance',$hobbies[2])){echo 'checked';}}?>> 
+											 <?php if(is_array($hobbies)){if(in_array('dance',$hobbies)){echo 'checked';}}?>> 
 										
 										<label class="form-check-label" for="val3">Dance </label>
 									</div>
@@ -161,7 +161,7 @@
 											   id="val4" 
 											   value="cricketer" 
 											   name="hobbies[]"
-											   <?php if(is_array($hobbies[3])){if(in_array('cricketer',$hobbies[3])){echo 'checked';}}?>>
+											   <?php if(is_array($hobbies)){if(in_array('cricketer',$hobbies)){echo 'checked';}}?>>
 										<label class="form-check-label" for="val4">Cricketer </label>
 									</div>
 									<div class="form-check form-check-inline">
@@ -170,7 +170,7 @@
 											   id="val5" 
 											   value="doctor"  
 											   name="hobbies[]" 
-											   <?php if(is_array($hobbies[4])){if(in_array('doctor', $hobbies[4])){echo 'checked';}}?>>
+											   <?php if(is_array($hobbies)){if(in_array('doctor', $hobbies)){echo 'checked';}}?>>
 										<label class="form-check-label" for="val5">Doctor </label>
 									</div>
 							</div> 

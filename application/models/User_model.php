@@ -10,7 +10,7 @@ class User_model extends CI_Model{
 
 	/**Login  after set UserProfile*/
    public  function getUserProfile($cond){
-     $this->db->select("id, name, email, address, user_img, gender, address,");
+     $this->db->select("id, name, email, address, user_img, gender, address,hobbies,state_id,city_id,zip");
 	 $this->db->from('users');
 	 $this->db->where($cond);
 	 $query = $this->db->get();
@@ -20,12 +20,12 @@ class User_model extends CI_Model{
   /** update user profile   (using email check) */
 
   public function checkProfileEmail($cond){ //for update 2 parametr pass as argment 
-	$this->db->select("id ,email, user_img, status");
+	$this->db->select("id,email,user_img,status");
 	$this->db->from('users');
 	$this->db->where($cond);
 	$query = $this->db->get();
 	return $query->row();
-  }
+    }
     public function updateUser( $data,$cond){
        $this->db->where($cond);
 	   $this->db->update("users", $data);
@@ -107,7 +107,7 @@ class User_model extends CI_Model{
 	    }
    /**Add new User by admine  */
 	public function	insertData($data){
-		$this->db->insert("users", $data);
+		$this->db->insert("users",$data);
 		$last_id =$this->db->insert_id();
 		return $last_id;
 	}
@@ -167,9 +167,18 @@ class User_model extends CI_Model{
 	}
 
 	//edit page updateEditPage
-	public function updateEditPage($cond){
-		
-
+	public function updateEditPage($data,$cond){
+		$this->db->where($cond);
+		$this->db->update("users", $data);
+		if($this->db->affected_rows()>0){
+		   //echo 'true';
+		   return 'true';
+		}
+		else{
+			 //echo 'some error';
+			 return 'false';
+		}
+   
 	}
 }
 

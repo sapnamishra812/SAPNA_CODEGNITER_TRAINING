@@ -261,7 +261,7 @@ class User extends CI_Controller{
 		$getCities = $this->User_model->getCitiesData("status='active'");
 		//print_r($getCities);exit;
 		$getUserData = $this->User_model->getUserProfile("id = '".$this->session->userdata('user_id')."'");
-		
+		//print_r($getUserData);exit; object value
 		
 		$data=array(
 			"heading"=>"Add Users",
@@ -271,6 +271,7 @@ class User extends CI_Controller{
 			'userData'=>$getUserData,
 
 		);
+		//print_r($data);exit;
 		//print_r($data);exit;
 		$this->load->view('layouts/header');
 		$this->load->view('layouts/sidenav');
@@ -286,8 +287,8 @@ class User extends CI_Controller{
 		 $address = $this->input->post('address');
 		 $email = $this->input->post('email');
 		 $gender = $this->input->post('gender');
-		 $state = $this->input->post('state');
-		 $city = $this->input->post('city');
+		 $state_id = $this->input->post('state');
+		 $city_id = $this->input->post('city');
 		 $hobbies = $this->input->post('hobbies');
 		 $zip = $this->input->post('zip');
 		 $addUserBtn = $this->input->post('add_userbtn');
@@ -327,7 +328,6 @@ class User extends CI_Controller{
 	
 							'upload_path' => './assets/uploads/users/',
 							'allowed_types' => "gif|jpg|png|jpeg",
-							//'overwrite' =>TRUE,
 							'max_size' =>"2000" ,
 							'max_height' => "1500", 
 							 'max_width' => '1500'
@@ -335,7 +335,7 @@ class User extends CI_Controller{
 						$this->load->library('upload', $config);
 						
 						if(!$this->upload->do_upload('user_profile')){
-							//print_r($this->upload->display_errors());exit;
+						
 							  $this->session->set_flashdata('file_error',$this->upload->display_errors());
 							return  $this->addUser();
 						
@@ -345,7 +345,7 @@ class User extends CI_Controller{
 							$image_name = $imageDetailArray['file_name'];
 						}
 					}
-					$newHobbies ='';
+					$newHobbies;
 					if(!empty($hobbies)){
 						$newHobbies = implode(",",$hobbies);
 					}
@@ -356,13 +356,13 @@ class User extends CI_Controller{
 						'user_img' =>$image_name,
 						'gender'=> $gender,
 						'hobbies'=>$newHobbies,
-						'state_id'=> $state,
-						'city_id'=> $city,
+						'state_id'=> $state_id,
+						'city_id'=> $city_id,
 						'zip'=>$zip,
 						'status'=>'active',
 						'created' => date('Y-m-d H:i:s')
 		            ); 
-
+                    //print_r($dataArray);exit;
 					$addNewRecord = $this->User_model->insertData($dataArray, " id='".$this->session->userdata('user_id')."'"); 
 					//print_r($addNewRecord);exit;
 					
@@ -380,6 +380,7 @@ class User extends CI_Controller{
 
 	  /** to load view page  */
 	  public function view($id){
+		//print_r($_POST);exit;
 		 $id= base64_decode($id);
 		$getData = $this->User_model->getUserView("users.id='".$id."'");
 		//print_r($getData);exit;
@@ -414,13 +415,18 @@ class User extends CI_Controller{
 	   /**Edit ser */
 	   public function edit($id){
 		$id1 = base64_decode($id);
+		//print_r($id1);exit;
 		$editData = $this->User_model->editPage("users.id= '".$id1."'");
        // print_r($editData);exit;
-
+		$getEditState = $this->User_model->getStatesData("status='active'");
+		$getEditCity = $this->User_model->getCitiesData("status='active'");
+		//print_r($getEditState);exit;
 		$arrayData = array(
 			'userData'=>$editData ,
 			'heading'=> 'Edit Page',
-			'sub_heading'=> 'Edit User Page!!'
+			'sub_heading'=> 'Edit User Page!!',
+			'states'=>$getEditState,
+			'cities'=>$getEditCity,
 		);
 
 		$this->load->view('layouts/header');
@@ -431,18 +437,18 @@ class User extends CI_Controller{
 
 
 	   /*** edit page action */
-	   public function editUserAction($id){
-		$id = base64_decode($id);
+	public function editUserAction($id){
+		 $id = base64_decode($id);
             //print_r($_POST);exit;
 			//print_r($id);exit;
-		$this->form_validation->set_rules('fname', 'First Name', 'required|trim|alpha', array(
+	 	$this->form_validation->set_rules('fname', 'First Name', 'required|trim|alpha', array(
 			'required'=> 'please enter %s',
 			'alpha' => 'only alphabates is allowed'
-	   ));
-	   $this->form_validation->set_rules('lname', 'Last Name', 'trim|required|alpha', array(
+	     ));
+	    $this->form_validation->set_rules('lname', 'Last Name', 'trim|required|alpha', array(
 		 'required'=> 'please enter %s',
 		 'alpha' => 'only alphabates is allowed'));
-	   $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email',
+	     $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email',
 			 array(
 				 'required'   => 'You have not provided %s',
 				 //'is_unique'  => 'This %s alread exist'
@@ -452,9 +458,9 @@ class User extends CI_Controller{
 		  $this->form_validation->set_rules('zip', 'Zip', 'trim|min_length[4]|max_length[6]|numeric');
           $Edit_userbtn=$this->input->post('edit_userbtn');
 
-		  if(isset($Edit_userbtn)){
+		  if(!empty($Edit_userbtn)){
                 if($this->form_validation->run()==FALSE){
-					$this->edit();
+					$this->edit(base64_encode($id));
 				}
 		  }
 		  else{
@@ -469,8 +475,70 @@ class User extends CI_Controller{
 			$city = $this->input->post('city');
 			$hobbies = $this->input->post('hobbies');
 			
-			$editData = $this->User_model->updateEditPage("id = '".$id."'");
-		  }
+			$editData = $this->User_model->editPage("users.id = '".$id."'");
+			
+			$getUserImage =  $this->User_model->editPage("users.id = '".$id."'");
+			
+            $image_name = $getUserImage->user_img;
+			
+			if(empty($getUser)){
+				//for error handling image
+				 // print_r('ggg');exit;
+				   if($_FILES['user_profile']['error']==0) {
+					//print_r($_FILES);exit;
+					   $config = array(
+						   'upload_path' => './assets/uploads/users/',
+						   'allowed_types' => "gif|jpg|png|jpeg",
+						   'max_size' =>"2000" ,
+						   'max_height' => "1500", 
+							'max_width' => '1500'
+					   );
+					   $this->load->library('upload', $config);
+					   if(!$this->upload->do_upload('user_profile')){
+						 
+							$this->session->set_flashdata('image_error',$this->upload->display_errors());
+						   return  $this->edit(base64_encode($id));
+   
+					   }
+					   else {
+						
+						   $imageDetailArray = $this->upload->data();
+						   //print_r($imageDetailArray);exit;
+						   $image_name = $imageDetailArray['file_name'];
+   
+						   /**used unlink Old image */
+						   
+						   if($getUserImage->user_img!="default.png"){
+							   unlink("./assets/uploads/users/".$getUserImage->user_img);
+						   }
+					   }
+				   }
+				   $newEditHobbies;
+					if(!empty($hobbies)){
+						$newEditHobbies = implode(",",$hobbies);
+					}
+				    $dataArray=array(
+								  'name' => $first_name." ".$last_name,
+								  'email'=> $email,
+								  'address' => $address,
+								  'user_img' =>$image_name,
+								  'zip'=>$zip,
+								  'gender'=>$gender,
+								   'city_id'=>$city,
+								   'state_id'=>$state,
+								   'hobbies'=>$newEditHobbies,
+								  'modified' => date('Y-m-d H:i:s')
+				   ); 
+				   $update = $this->User_model->updateEditPage($dataArray, " id='".$this->session->userdata('user_id')."'"); 
+				  print_r($update);exit;
+				   $this->session->set_flashdata('success_message', ' User is edit successflly');
+				   $this->edit(base64_encode($id));
+			 } 
+			else{
+                redirect('User/edit/'.base64_encode($id) );
+			}
 
-	   }
+		}
+
+	}
 }

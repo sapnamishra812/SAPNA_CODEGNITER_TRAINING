@@ -152,7 +152,7 @@
 											   id="val5" 
 											   value="doctor"  
 											   name="hobbies[]" 
-											   <?php if(is_array(set_value('hobbies[]'))){if(in_array('doctor', set_value('hobbies[]'))){echo 'checked';}}?>> ----
+											   <?php if(is_array(set_value('hobbies[]'))){if(in_array('doctor', set_value('hobbies[]'))){echo 'checked';}}?>>
 										<label class="form-check-label" for="val5">Doctor </label>
 									</div>
 							</div> 
