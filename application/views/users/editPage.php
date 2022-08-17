@@ -55,13 +55,13 @@
 								   value="<?php if(!empty($userData->email)){echo $userData->email;} ?>" >
 						</div>
 						<div class="form-group purple-border">
-								<label for="address">Address </label>
+								<label for="address">Address </label><span class="error"><?php echo form_error('address'); ?></span>
 								<textarea class="form-control" 
 								          id="address" 
 										  rows="3" 
 										  placeholder="Enter Your Address" 
-										  name="address"
-										  > <?php  if(!empty($userData->address)){ echo $userData->address ;}?>
+										  name="address"> 
+										  <?php  if(!empty($userData->address)){ echo $userData->address ;}?>
 										 
 								</textarea>
 						</div>
@@ -118,13 +118,6 @@
 								<?php 
 								      if(!empty($userData->hobbies))  {
 										$hobbies= explode(",", $userData->hobbies);
-										//print_r($hobbies);exit;
-										// $fst=$hobbies[0];
-										// //print_r($fst);exit;
-										// $sec=$hobbies[1];
-										// $thd=$hobbies[2];
-										// $fth=$hobbies[3];
-										// $fty = $hobbies[4];
 									}
 								 ?>
 								<div class="form-check form-check-inline">
@@ -177,7 +170,7 @@
 						</div>
 							
 						<div class="form-group">
-							<label for="img">Profile</label> <span class='error'><?php echo $this->session->flashdata('file_error'); ?></span>
+							<label for="img">Profile</label> <span class='error'><?php echo $this->session->flashdata('image_error'); ?></span>
 							<input type="file" class="form-control" name="user_profile"  value="<?php if(!empty($userData->user_img)){ echo $userData->user_img; } ?>" >
 							<small id="img" class="form-text text-muted">Only .png, .jpg, .jpeg, .gif extension is allowed.</small>
 							<img src="<?php echo base_url(); ?>/assets/uploads/users/<?php if(!empty($userData->user_img)){echo $userData->user_img;} else{ echo "default.png";} ?>" height="50px" width="50px" alt="User Profile">

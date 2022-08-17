@@ -67,7 +67,7 @@
 										<?php 
 										//print_r($userData->state_id);exit;
 										  if(!empty($states)){foreach($states as $state){?>
-											<option value="<?php echo $state['id'];?>" <?php if($userData->state_id==$state['id']){
+											<option value="<?php echo $state['id'];?>" <?php if(set_value('state')==$state['id']){
 												echo 'selected';
 											}?>><?php echo $state['state_name']; ?></option>
 											<?php }}?>
@@ -78,7 +78,7 @@
 									<select id="inputCity" class="form-control" name="city">
 										<option value="0" selected>Select City</option>
 										<?php if(!empty($cities)){foreach($cities as $city){ ?>
-											<option value="<?php echo $city['id'];?>" <?php if($userData->city_id==$city['id']){echo 'selected';}?>><?php echo $city['city_name']; ?></option>
+											<option value="<?php echo $city['id'];?>" <?php if(set_value('city')==$city['id']){echo 'selected';}?>><?php echo $city['city_name']; ?></option>
 											<?php }}?>
 									</select>
 								</div>

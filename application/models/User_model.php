@@ -164,20 +164,24 @@ class User_model extends CI_Model{
 		$this->db->where($cond);
 		$query = $this->db->get();
 		return $query->row();
+
 	}
 
 	//edit page updateEditPage
 	public function updateEditPage($data,$cond){
 		$this->db->where($cond);
-		$this->db->update("users", $data);
-		if($this->db->affected_rows()>0){
-		   //echo 'true';
-		   return 'true';
-		}
-		else{
-			 //echo 'some error';
-			 return 'false';
-		}
+	   $this->db->update("users", $data);
+	   if($this->db->affected_rows()>0){
+		  //echo 'true';
+		  //print_r($this->db->last_query());exit;
+		  //print_r('dd');exit;
+		  return 'true';
+	   }
+	   else{
+		    //echo 'some error';
+			//print_r('lld');exit;
+			return 'false';
+	   }
    
 	}
 }

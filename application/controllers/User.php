@@ -78,7 +78,7 @@ class User extends CI_Controller{
 
 		   //check for dublicate error if no  error occre then goto  contine else go to profileSeeting page  
 		  $getUser = $this->User_model->checkProfileEmail("email = '".$email. "' and id != '".$this->session->userdata('user_id')."'"); 
-		   
+		  // print_r($getUser);exit;
 		    if(empty($getUser)){
 			 //for error handling image
 			   
@@ -316,7 +316,6 @@ class User extends CI_Controller{
 		  $this->form_validation->set_rules('zip', 'Zip', 'trim|min_length[4]|max_length[6]|numeric');
           //print_r($addUserBtn);exit;
 		   if(isset($addUserBtn)){
-			
                   if($this->form_validation->run() == FALSE){
                            $this->addUser();
 				  }
@@ -372,7 +371,6 @@ class User extends CI_Controller{
 				  }
 		   }
 		   else{
-			
 			 redirect('User/addUser');
 		   }
 		   
@@ -439,105 +437,127 @@ class User extends CI_Controller{
 	   /*** edit page action */
 	public function editUserAction($id){
 		 $id = base64_decode($id);
-            //print_r($_POST);exit;
-			//print_r($id);exit;
-	 	$this->form_validation->set_rules('fname', 'First Name', 'required|trim|alpha', array(
+	 	$this->form_validation->set_rules('first_name', 'First Name', 'required|trim|alpha', array(
 			'required'=> 'please enter %s',
 			'alpha' => 'only alphabates is allowed'
 	     ));
-	    $this->form_validation->set_rules('lname', 'Last Name', 'trim|required|alpha', array(
+	    $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|alpha', array(
 		 'required'=> 'please enter %s',
 		 'alpha' => 'only alphabates is allowed'));
 	     $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email',
 			 array(
 				 'required'   => 'You have not provided %s',
 				 //'is_unique'  => 'This %s alread exist'
-				 )
-		  );
+				 ));
 		  $this->form_validation->set_rules('gender', 'Gender', 'required');
+		  $this->form_validation->set_rules('address', 'Address', 'required');
 		  $this->form_validation->set_rules('zip', 'Zip', 'trim|min_length[4]|max_length[6]|numeric');
-          $Edit_userbtn=$this->input->post('edit_userbtn');
+         // $Edit_userbtn=$this->input->post('edit_userbtn');
 
-		  if(!empty($Edit_userbtn)){
-                if($this->form_validation->run()==FALSE){
-					$this->edit(base64_encode($id));
-				}
+		$first_name = $this->input->post('first_name');
+		$last_name = $this->input->post('last_name');
+		$email = $this->input->post('email');
+		$address = $this->input->post('address');
+		$zip = $this->input->post('zip');
+		$gender = $this->input->post('gender');
+		$state = $this->input->post('state');
+		$city = $this->input->post('city');
+		$hobbies = $this->input->post('hobbies');
+		
+
+		$editBtn = $this->input->post('edit_userbtn');
+		$getUserImage = $this->User_model->editPage("users.id='".$id."'"); 
+		//print_r($getUserImage);exit;
+		$image_name = $getUserImage->user_img;	// alway put db image it may be defaultor other image 	
+		//print_r($image_name);exit;
+		if(isset($editBtn)) { 
+		  //print_r('hhhh');exit;
+		  if($this->form_validation->run() == FALSE) { 
+			// print_r('fff');exit; 
+			    $this->edit(base64_encode($id)); 
+		  } /*if($this->form_validation->run() == FALSE) */
+		  else {
+			  //print_r("hello");exit;
+			// $email = $this->input->post('email');
+  
+			 //check for dublicate error if no  error occre then goto  contine else go to profileSeeting page  
+			$getUser = $this->User_model->editPage("users.id='".$id."'");  
+			 //print_r($getUser);exit;
+			  if($_POST){
+				//print_r($_POST);exit;
+			   //for error handling image
+				 
+				  if($_FILES['user_profile']['error']==0) {
+					//print_r($_POST);exit; 
+			         // print_r($_FILES);exit;
+					
+					  $config = array(
+  
+						  'upload_path' => './assets/uploads/users/',
+						  'allowed_types' => "gif|jpg|png|jpeg",
+						  //'overwrite' =>TRUE,
+						  'max_size' =>"2000" ,//in kb
+						  'max_height' => "1500", 
+						   'max_width' => '1500'
+					  );
+					  $this->load->library('upload', $config);
+					  
+					  if(!$this->upload->do_upload('user_profile')){
+						//print_r('img');exit;
+					  
+						$this->session->set_flashdata('image_error',$this->upload->display_errors());
+						  return  $this->edit(base64_encode($id));
+						  //return $this->load->view('users/user', $error);
+  
+  
+					  }
+					  else {
+					//	print_r('not img');exit;
+						  $imageDetailArray = $this->upload->data();
+						 // print_r($imageDetailArray);exit;
+						  $image_name = $imageDetailArray['file_name'];
+  
+						  /**used unlink Old image */
+						  
+						  if($getUserImage->user_img!="default.png"){
+							//print_r('old');exit;
+							  unlink("./assets/uploads/users/".$getUserImage->user_img);
+						  }
+					  }
+				  }/**if($_FILES['user_img']['error']==0) */
+				  $newHobbies;
+				  if(!empty($hobbies)){
+					  $newHobbies = implode(",",$hobbies);
+				  }
+				   $dataArray=array(
+								'name' => $first_name.' '.$last_name,
+								'email'=> $email,
+								'address' => $address,
+								'gender'=> $gender,
+								'hobbies'=>$newHobbies,
+								'state_id'=> $state,
+								'city_id'=> $city,
+								'zip'=>$zip,
+								 'user_img' =>$image_name,
+								 'modified' => date('Y-m-d H:i:s')
+				  ); 
+				 //print_r( $dataArray);exit;
+				  $update = $this->User_model->updateEditPage($dataArray, "users.id='".$id."'"); 
+				  //print_r($update);exit;
+				  $this->session->set_flashdata('sccess_msg', ' User is edit successflly');
+				 redirect('User/index');
+			  } //if(empty($getUSer))
+			  else { 
+				//print_r('exit');exit;
+			  $this->session->set_flashdata('error_message', 'somethig get wrong');
+				  //$this->session->flash
+				  $this->edit(base64_encode($id));
+			  }
 		  }
-		  else{
-                
-			$first_name = $this->input->post('first_name');
-			$last_name = $this->input->post('last_name');
-			$email = $this->input->post('email');
-			$address = $this->input->post('address');
-			$zip = $this->input->post('zip');
-			$gender = $this->input->post('gender');
-			$state = $this->input->post('state');
-			$city = $this->input->post('city');
-			$hobbies = $this->input->post('hobbies');
-			
-			$editData = $this->User_model->editPage("users.id = '".$id."'");
-			
-			$getUserImage =  $this->User_model->editPage("users.id = '".$id."'");
-			
-            $image_name = $getUserImage->user_img;
-			
-			if(empty($getUser)){
-				//for error handling image
-				 // print_r('ggg');exit;
-				   if($_FILES['user_profile']['error']==0) {
-					//print_r($_FILES);exit;
-					   $config = array(
-						   'upload_path' => './assets/uploads/users/',
-						   'allowed_types' => "gif|jpg|png|jpeg",
-						   'max_size' =>"2000" ,
-						   'max_height' => "1500", 
-							'max_width' => '1500'
-					   );
-					   $this->load->library('upload', $config);
-					   if(!$this->upload->do_upload('user_profile')){
-						 
-							$this->session->set_flashdata('image_error',$this->upload->display_errors());
-						   return  $this->edit(base64_encode($id));
-   
-					   }
-					   else {
-						
-						   $imageDetailArray = $this->upload->data();
-						   //print_r($imageDetailArray);exit;
-						   $image_name = $imageDetailArray['file_name'];
-   
-						   /**used unlink Old image */
-						   
-						   if($getUserImage->user_img!="default.png"){
-							   unlink("./assets/uploads/users/".$getUserImage->user_img);
-						   }
-					   }
-				   }
-				   $newEditHobbies;
-					if(!empty($hobbies)){
-						$newEditHobbies = implode(",",$hobbies);
-					}
-				    $dataArray=array(
-								  'name' => $first_name." ".$last_name,
-								  'email'=> $email,
-								  'address' => $address,
-								  'user_img' =>$image_name,
-								  'zip'=>$zip,
-								  'gender'=>$gender,
-								   'city_id'=>$city,
-								   'state_id'=>$state,
-								   'hobbies'=>$newEditHobbies,
-								  'modified' => date('Y-m-d H:i:s')
-				   ); 
-				   $update = $this->User_model->updateEditPage($dataArray, " id='".$this->session->userdata('user_id')."'"); 
-				  print_r($update);exit;
-				   $this->session->set_flashdata('success_message', ' User is edit successflly');
-				   $this->edit(base64_encode($id));
-			 } 
-			else{
-                redirect('User/edit/'.base64_encode($id) );
-			}
-
+		}/*if(isset($updateBtn))*/
+		else {
+			//print_r('last');exit;
+		   redirect('User/edit/'.base64_encode($id));
 		}
 
 	}
