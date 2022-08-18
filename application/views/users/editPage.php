@@ -45,7 +45,7 @@
 								   value="<?php if(isset($lastName)){echo  $lastName ;} ?>">
 						</div>
 						<div class="form-group">
-							<label for="email" class="required">Email </label><span class="error"><?php echo form_error('email'); ?></span>
+							<label for="email" class="required">Email </label><span class="error"><?php echo $this->session->flashdata('error_message'); ?></span>
 							<input type="text" 
 							       class="form-control" 
 								   id="email" 
@@ -170,7 +170,7 @@
 						</div>
 							
 						<div class="form-group">
-							<label for="img">Profile</label> <span class='error'><?php echo $this->session->flashdata('image_error'); ?></span>
+							<label for="img">Profile</label> <span class='error'><?php echo $this->session->flashdata('file_error'); ?></span>
 							<input type="file" class="form-control" name="user_profile"  value="<?php if(!empty($userData->user_img)){ echo $userData->user_img; } ?>" >
 							<small id="img" class="form-text text-muted">Only .png, .jpg, .jpeg, .gif extension is allowed.</small>
 							<img src="<?php echo base_url(); ?>/assets/uploads/users/<?php if(!empty($userData->user_img)){echo $userData->user_img;} else{ echo "default.png";} ?>" height="50px" width="50px" alt="User Profile">

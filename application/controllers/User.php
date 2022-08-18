@@ -122,7 +122,7 @@ class User extends CI_Controller{
 							   'user_img' =>$image_name,
 							   'modified' => date('Y-m-d H:i:s')
 				); 
-				$update = $this->User_model->updateUser($dataArray, " id='".$this->session->userdata('user_id')."'"); 
+				$update = $this->User_model->updateUser($dataArray, "id='".$this->session->userdata('user_id')."'"); 
                 $this->session->set_flashdata('success_message', ' User is update successflly');
 				$this->profileSetting();
 		    } //if(empty($getUSer))
@@ -467,35 +467,19 @@ class User extends CI_Controller{
 
 		$editBtn = $this->input->post('edit_userbtn');
 		$getUserImage = $this->User_model->editPage("users.id='".$id."'"); 
-		//print_r($getUserImage);exit;
-		$image_name = $getUserImage->user_img;	// alway put db image it may be defaultor other image 	
-		//print_r($image_name);exit;
+		$image_name = $getUserImage->user_img;	// alway put db image it may be defaultor other image 
 		if(isset($editBtn)) { 
-		  //print_r('hhhh');exit;
 		  if($this->form_validation->run() == FALSE) { 
-			// print_r('fff');exit; 
 			    $this->edit(base64_encode($id)); 
 		  } /*if($this->form_validation->run() == FALSE) */
 		  else {
-			  //print_r("hello");exit;
-			// $email = $this->input->post('email');
-  
-			 //check for dublicate error if no  error occre then goto  contine else go to profileSeeting page  
-			$getUser = $this->User_model->editPage("users.id='".$id."'");  
-			 //print_r($getUser);exit;
-			  if($_POST){
-				//print_r($_POST);exit;
-			   //for error handling image
-				 
+            $getUser = $this->User_model->editPage("email = '".$email. "' and users.id='".$id."'");  
+			
+			  if(!empty($getUser)){
 				  if($_FILES['user_profile']['error']==0) {
-					//print_r($_POST);exit; 
-			         // print_r($_FILES);exit;
-					
 					  $config = array(
-  
 						  'upload_path' => './assets/uploads/users/',
 						  'allowed_types' => "gif|jpg|png|jpeg",
-						  //'overwrite' =>TRUE,
 						  'max_size' =>"2000" ,//in kb
 						  'max_height' => "1500", 
 						   'max_width' => '1500'
@@ -505,22 +489,17 @@ class User extends CI_Controller{
 					  if(!$this->upload->do_upload('user_profile')){
 						//print_r('img');exit;
 					  
-						$this->session->set_flashdata('image_error',$this->upload->display_errors());
+						$this->session->set_flashdata('file_error',$this->upload->display_errors());
 						  return  $this->edit(base64_encode($id));
 						  //return $this->load->view('users/user', $error);
   
   
 					  }
 					  else {
-					//	print_r('not img');exit;
 						  $imageDetailArray = $this->upload->data();
-						 // print_r($imageDetailArray);exit;
 						  $image_name = $imageDetailArray['file_name'];
-  
 						  /**used unlink Old image */
-						  
 						  if($getUserImage->user_img!="default.png"){
-							//print_r('old');exit;
 							  unlink("./assets/uploads/users/".$getUserImage->user_img);
 						  }
 					  }
@@ -549,8 +528,7 @@ class User extends CI_Controller{
 			  } //if(empty($getUSer))
 			  else { 
 				//print_r('exit');exit;
-			  $this->session->set_flashdata('error_message', 'somethig get wrong');
-				  //$this->session->flash
+			 $this->session->set_flashdata('error_message', 'Email address is already exit');
 				  $this->edit(base64_encode($id));
 			  }
 		  }

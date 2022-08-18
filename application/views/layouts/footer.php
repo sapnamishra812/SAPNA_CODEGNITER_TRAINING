@@ -19,5 +19,6 @@
         <script src="<?php echo base_url(); ?>/assets/js/datatables-simple-demo.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
          <script src="<?php echo base_url(); ?>assets/js/user_custome.js"></script>
+		 <script src="<?php echo base_url();?>assets/js/common.js"></script>
     </body>
 </html>

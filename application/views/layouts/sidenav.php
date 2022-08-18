@@ -36,6 +36,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 Users
                             </a>
+							<a class="nav-link" href="<?php echo site_url("States/index"); ?>">
+							  <div class="sb-nav-link-icon"><i class="fa-solid fa-earth-asia"></i></div>
+                              States
+							</a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">

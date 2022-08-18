@@ -170,7 +170,7 @@ class User_model extends CI_Model{
 	//edit page updateEditPage
 	public function updateEditPage($data,$cond){
 		$this->db->where($cond);
-	   $this->db->update("users", $data);
+	    $this->db->update("users", $data);
 	   if($this->db->affected_rows()>0){
 		  //echo 'true';
 		  //print_r($this->db->last_query());exit;
